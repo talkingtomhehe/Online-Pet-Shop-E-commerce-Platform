@@ -1,0 +1,10 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Set your base path if needed
+# RewriteBase /chabongshop/
+
+# Redirect all requests to index.php unless they are existing files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
