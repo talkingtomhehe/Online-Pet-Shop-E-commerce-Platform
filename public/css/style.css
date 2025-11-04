@@ -1,0 +1,1705 @@
+/**
+ * PetShop Theme Stylesheet
+ * - Organized by section
+ * - Improved text color contrast for better readability
+ * - Maintaining gold/brown (#b77c52) theme with better visual hierarchy
+ */
+
+/* ==================================================
+   1. Base Styles & Reset
+   ================================================== */
+   * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* General Styles */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #333333; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+}
+
+/* Make all images responsive by default */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ==================================================
+   2. Layout Structure
+   ================================================== */
+/* Header Styles */
+header {
+    background-color: #FFFFFF;
+    color: #6d5741;
+    padding: 2px;
+    text-align: center;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    background-color: #FFFFFF;
+    padding-top: 88px; /* Combined height of navbar and utility bar */
+    margin-top: 0;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f5f0e9;
+    color: #555555; /* IMPROVED: Changed from #9d6340 to darker gray for better contrast */
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    margin-top: auto;
+}
+
+/* ==================================================
+   3. Utility Bar
+   ================================================== */
+.utility-bar {
+    background-color: #f5f0e9;
+    padding: 4px 0;
+    font-size: 12px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1035 !important;
+}
+
+.utility-btn {
+    background: transparent;
+    border: none;
+    color: #b77c52; /* IMPROVED: Changed from #d4a476 for better contrast */
+    font-size: 12px;
+    padding: 2px 8px;
+    transition: color 0.2s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.utility-btn:first-child::after {
+    content: '|';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b77c52; /* IMPROVED: Changed from #d4a476 for better contrast */
+    font-size: 12px;
+    opacity: 0.5;    
+    pointer-events: none;
+    padding: 0 2px;
+    padding-bottom: 2px;
+}
+
+.utility-btn:hover {
+    color: #9d6340;
+}
+
+.utility-bar .dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.15) !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==================================================
+   4. Navigation & Menu
+   ================================================== */
+/* Navbar basic structure */
+.navbar.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030 !important;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(183, 124, 82, 0.15);
+    transition: all 0.3s ease;
+    margin-top: 28px;
+}
+
+.navbar-nav {
+    margin-left: 50px; 
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    padding: 0 10px; 
+}
+
+/* Navbar text colors */
+.nav-link {
+    color: #444444 !important; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover, 
+.nav-link:focus {
+    color: #b77c52 !important;
+}
+
+.nav-link.active {
+    color: #b77c52 !important;
+    font-weight: 600;
+}
+
+.dropdown-item {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+}
+
+.dropdown-item:hover, 
+.dropdown-item:focus {
+    background-color: #f5f0e9;
+    color: #b77c52;
+}
+
+.dropdown-item.active {
+    background-color: #b77c52;
+    color: white;
+}
+
+/* Logo styling */
+.navbar-brand {
+    padding: 0;
+    padding-left: 15px;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    overflow: hidden;
+}
+
+.navbar-brand img {
+    max-height: 50px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+/* Brand text */
+.brand-text {
+    font-family: Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+}
+
+/* Navbar container fluid */
+.navbar .container-fluid {
+    padding-left: 5px;
+}
+
+/* ==================================================
+   5. Dropdown Menu Styling
+   ================================================== */
+/* Dropdown menu basic styling */
+.navbar .dropdown-menu {
+    padding: 0.5rem 0;
+    margin-top: 0;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.175);
+}
+
+/* Dropdown items styling */
+.navbar .dropdown-menu .dropdown-item {
+    padding: 0.25rem 1.5rem;
+    font-weight: 400;
+    color: #333333; /* IMPROVED: Changed from #212529 to slightly lighter for consistency */
+    background-color: transparent;
+    border: 0;
+}
+
+.navbar .dropdown-menu .dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover, 
+.navbar .dropdown-menu .dropdown-item:focus {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
+
+.navbar .dropdown-menu .dropdown-item.active,
+.navbar .dropdown-menu .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #b77c52;
+}
+
+/* Desktop dropdown behavior */
+@media (min-width: 992px) {
+    /* Make the nav item container stable */
+    .navbar-nav {
+        height: 60px;
+    }
+    
+    /* Ensure the dropdown container is positioned relative */
+    .navbar .nav-item.dropdown {
+        position: relative !important;
+    }
+    
+    /* Position the dropdown menu directly under the Products button */
+    .navbar-nav .nav-item.dropdown .dropdown-menu {
+        position: absolute !important;
+        left: 0 !important;
+        top: 100% !important;
+        transform: none !important;
+        min-width: 200px;
+        width: auto;
+        margin: 0 !important;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 0.25rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.175);
+        background-color: white;
+        z-index: 1040 !important;
+    }
+    
+    /* Make dropdown items clearly visible */
+    .navbar .dropdown-menu .dropdown-item {
+        background-color: white;
+        padding: 8px 16px;
+    }
+}
+
+/* Mobile dropdown behavior */
+@media (max-width: 991px) {
+    /* Keep static positioning for mobile */
+    .navbar .dropdown {
+        position: static !important;
+    }
+}
+
+/* ==================================================
+   6. Search & Cart Elements
+   ================================================== */
+/* Search styling */
+.search-input {
+    padding: 8px 48px 8px 16px;  
+    border-radius: 25px;
+    width: 180px;
+    border: 1px solid #e9e2d9;
+    background-color: #f8f5f0;
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: #999999; /* IMPROVED: Changed from #9a8268 to lighter gray for better readability */
+    font-size: 16px;
+}
+
+.search-input:hover {
+    background-color: #f5f0e9;
+}
+
+.search-input:focus {
+    outline: none;
+    background-color: #fff;
+    border-color: #e9e2d9;
+    box-shadow: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #b77c52;
+    transition: opacity 0.2s ease;
+}
+
+.search-input:focus + .search-icon,
+.search-input:not(:placeholder-shown) + .search-icon {
+    opacity: 0;
+}
+
+/* Mobile search */
+.mobile-search {
+    display: none;
+    max-width: calc(100% - 140px);
+    position: absolute;
+    left: 80px;
+}
+
+/* Cart badge styling */
+.nav-link .badge.rounded-pill.bg-primary,
+.mobile-cart .badge.rounded-pill.bg-primary {
+    position: absolute !important;
+    top: -1px !important; 
+    right: -15px !important;
+    transform: translate(-80%, -25%) !important;
+    font-size: 0.65rem;
+    padding: 0.25em 0.5em;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fix for mobile cart badge */
+.mobile-cart .badge {
+    top: 5px !important; 
+    right: -12px !important;
+    transform: translate(0%, -25%) !important;
+}
+
+.nav-item .nav-link.position-relative {
+    padding-right: 16px;
+}
+
+/* Desktop cart icon formatting */
+.nav-item .nav-link .bi-cart3 {
+    font-size: 20px;
+    position: relative;
+    top: -1px;
+}
+
+/* ==================================================
+   7. Typography & Text Styles
+   ================================================== */
+h1, h2, h3, h4, h5 {
+    color: #6d5741; /* Keep brown for headings */
+}
+
+h3.section-title {
+    color: #6d5741;
+    border-bottom: 2px solid #e9e2d9;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Category titles */
+.card-header h5 {
+    color: #6d5741;
+    font-weight: 500;
+}
+
+/* Product card title */
+.card-title {
+    color: #444444; /* IMPROVED: Changed from #b77c52 to darker gray for better readability */
+    font-weight: 500;
+}
+
+/* Product card text (price) */
+.card-text {
+    color: #b77c52;
+    font-weight: 600;
+}
+
+/* Product details page */
+.product-title {
+    color: #444444;
+    font-weight: 600;
+}
+
+.product-category {
+    color: white;
+    background-color: #b77c52 !important;
+    border-color: #b77c52 !important;
+}
+
+.product-price {
+    color: #b77c52 !important;
+    font-weight: 600;
+}
+
+.product-description {
+    color: #444444;
+    line-height: 1.6;
+}
+
+/* Section headings on product details page */
+.product-details h3, 
+.mt-5 h3 {
+    color: #b77c52;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Product name in details page */
+.product-details h1 {
+    color: #000;
+    font-weight: 600;
+}
+
+/* Description text on product details */
+.product-details p {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    line-height: 1.6;
+}
+
+/* Text colors for consistency */
+.text-primary {
+    color: #b77c52 !important;
+}
+
+.text-secondary {
+    color: #777777 !important; /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
+}
+
+.text-muted {
+    color: #777777 !important; /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
+}
+
+/* Special emphasis text */
+.special-text {
+    color: #b77c52;
+    font-weight: 500;
+}
+
+/* Search results highlight */
+.highlight {
+    background-color: rgba(183, 124, 82, 0.15);
+    padding: 0 2px;
+}
+
+/* Form labels on product details */
+.form-label {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+}
+
+/* Additional section headers across site */
+section h2, 
+section .h2 {
+    color: #b77c52;
+    font-weight: 600;
+}
+
+/* ==================================================
+   8. Product Cards & Listings
+   ================================================== */
+/* Product container */
+.product-container {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+/* Product Card Styles */
+.product-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card .card-img-top {
+    height: 200px;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+.product-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card .card-title {
+    font-size: 1rem;
+    height: 2.5rem;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.product-card .card-text {
+    margin-bottom: 0.5rem;
+}
+
+.product-card .btn {
+    margin-top: auto;
+}
+
+/* Column sizing for products */
+.product-col {
+    width: 20%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Clickable card styles */
+.clickable-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(183, 124, 82, 0.2);
+}
+
+/* ==================================================
+   9. Buttons & Interactive Elements
+   ================================================== */
+/* Custom button styling */
+.custom-btn {
+    border-radius: 25px;
+    padding: 8px 20px;
+    background-color: transparent;
+    border: 2px solid #f5f0e9;
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: #f5f0e9;
+    border-color: #f5f0e9;
+    color: #b77c52;
+}
+
+.custom-btn:active {
+    background-color: #f5f0e9;
+    border-color: #f5f0e9;
+    color: #b77c52;
+}
+
+.custom-btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(183, 124, 82, 0.25);
+}
+
+/* Custom Add to Cart button styling */
+.btn-outline-dark.cart-btn {
+    color: #444444; /* IMPROVED: Changed from #000000 to darker gray for better consistency */
+    background-color: transparent;
+    border-color: #e9e2d9;
+}
+
+.btn-outline-dark.cart-btn:hover {
+    color: #b77c52 !important; /* IMPROVED: Changed from #000000 to gold/brown */
+    background-color: transparent !important;
+    border-color: #b77c52 !important;
+}
+
+.btn-outline-dark.cart-btn:hover i {
+    color: #b77c52 !important;
+}
+
+.btn-outline-dark.cart-btn:active,
+.btn-outline-dark.cart-btn:focus {
+    color: #444444 !important; /* IMPROVED: Changed from #000000 to darker gray */
+    background-color: rgba(183, 124, 82, 0.1) !important;
+    border-color: #b77c52 !important;
+    box-shadow: none !important;
+}
+
+/* View All Products button styling */
+.view-all-btn {
+    background-color: white;
+    color: #444444; /* IMPROVED: Changed from #000000 to darker gray */
+    border: 1px solid #e9e2d9;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.view-all-btn:hover {
+    border-color: #b77c52 !important;
+    color: #b77c52 !important;
+}
+
+.view-all-btn.btn {
+    border: 1px solid #e9e2d9 !important;
+    font-weight: 400;
+}
+
+.view-all-btn.btn:hover {
+    border: 1px solid #b77c52 !important;
+}
+
+.view-all-btn:active {
+    background-color: rgba(183, 124, 82, 0.1) !important;
+    border-color: #b77c52 !important;
+    color: #b77c52 !important;
+    box-shadow: none !important;
+}
+
+/* Button variations */
+.btn-primary {
+    background-color: #b77c52 !important;
+    border-color: #b77c52 !important;
+}
+
+.btn-primary:hover {
+    background-color: #9a683f !important;
+    border-color: #9a683f !important;
+}
+
+.btn-dark:hover {
+    background-color: #9a683f !important;
+    border-color: #9a683f !important;
+}
+
+/* Sort buttons styling */
+.btn-outline-secondary {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    border-color: #e9e2d9;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f5f0e9;
+    color: #b77c52;
+    border-color: #b77c52;
+}
+
+/* Back to top button styling */
+#myBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    border: none;
+    outline: none;
+    background-color: rgba(183, 124, 82, 0.7);
+    color: white;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#myBtn:hover {
+    background-color: rgba(183, 124, 82, 1);
+    transform: translateY(-3px);
+}
+
+/* ==================================================
+   10. Components & UI Elements
+   ================================================== */
+/* Badge styling */
+.badge.bg-secondary {
+    background-color: #9a8268 !important;
+}
+
+.badge.bg-primary {
+    background-color: #b77c52 !important;
+}
+
+/* Category sidebar styling */
+.list-group-item {
+    background-color: #fff;
+    border-color: #e9e2d9;
+}
+
+.list-group-item.active {
+    background-color: #b77c52 !important;
+    border-color: #b77c52 !important;
+}
+
+.list-group-item a {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+}
+
+.list-group-item a:hover {
+    color: #b77c52;
+}
+
+/* Card header styling */
+.card-header {
+    background-color: #f5f0e9;
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    border-bottom: 1px solid #e9e2d9;
+}
+
+/* Alert styling */
+.alert-info {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    background-color: #f5f0e9;
+    border-color: #e9e2d9;
+}
+
+/* Breadcrumb styling */
+.breadcrumb-item a {
+    color: #777777; /* IMPROVED: Changed from #9a8268 to medium gray */
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: #b77c52;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #b77c52;
+}
+
+/* Pagination styling */
+.pagination .page-link {
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    background-color: #fff;
+    border-color: #e9e2d9;
+}
+
+.pagination .page-link:hover {
+    color: #b77c52;
+    background-color: #f5f0e9;
+    border-color: #e9e2d9;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #b77c52;
+    border-color: #b77c52;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c3b6a5;
+}
+
+/* ==================================================
+   11. Banner Section
+   ================================================== */
+.banner-container {
+    position: relative;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.banner-image {
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    /* Add a subtle gradient overlay for better text readability */
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.banner-overlay .container {
+    color: white;
+    text-align: left;
+}
+
+.banner-content {
+    max-width: 500px;
+    padding-left: 5%; /* Use percentage for responsive positioning */
+}
+
+.banner-overlay h1 {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+    line-height: 1.2;
+    position: relative;
+}
+
+/* Add a decorative line under the heading */
+.banner-overlay h1:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: #b77c52;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.banner-overlay p {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    font-weight: 300;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+/* ==================================================
+   12. Authentication Forms
+   ================================================== */
+.auth-card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.auth-title {
+    color: #b77c52;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.auth-input {
+    border-color: #e9e2d9;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+    border-color: #b77c52;
+    box-shadow: 0 0 0 0.15rem rgba(183, 124, 82, 0.25);
+}
+
+.forgot-link {
+    color: #777777; /* IMPROVED: Changed from #9a8268 to medium gray */
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgot-link:hover {
+    color: #b77c52;
+    text-decoration: underline;
+}
+
+.auth-btn {
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.social-btn {
+    border: 1px solid #e9e2d9;
+    background-color: #fff;
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Social login buttons */
+.social-box {
+    border: 2px solid #e0d5c5;
+    background-color: #fff;
+    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    font-weight: 500;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-box:hover {
+    border-color: #b77c52;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.social-box:active {
+    transform: translateY(0);
+}
+
+.social-box.selected {
+    background-color: #b77c52;
+    border-color: #b77c52;
+    color: white;
+    box-shadow: 0 2px 8px rgba(183, 124, 82, 0.4);
+}
+
+/* Facebook icon color fix when selected */
+.social-box.selected i.bi-facebook {
+    color: white !important;
+}
+
+.auth-link {
+    color: #b77c52;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.auth-link:hover {
+    color: #9a683f;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.login-message {
+    font-size: 1.5rem;
+    letter-spacing: 0.8px;
+}
+
+/* ==================================================
+   13. Media Queries
+   ================================================== */
+/* Product column sizing for different screen sizes */
+@media (max-width: 1199px) {
+    .product-col {
+        width: 25%; /* 4 per row on medium screens */
+    }
+}
+
+@media (max-width: 991px) {
+    /* Keep desktop search hidden on mobile */
+    form:not(.mobile-search) .search-input {
+        display: none;
+    }
+
+    /* Fix offcanvas positioning below utility bar */
+    .offcanvas.offcanvas-end {
+        top: 28px !important;
+        height: calc(100% - 28px) !important;
+        z-index: 1033;
+    }
+    
+    /* Fix dropdown toggle button in mobile */
+    .offcanvas-body .dropdown-toggle::after {
+        display: inline-block !important;
+        margin-left: 0.5em !important;
+    }
+
+    /* Fix dropdown menu display in mobile */
+    .offcanvas-body .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Add this critical fix for dropdown functionality */
+    .offcanvas-body .nav-item.dropdown {
+        position: relative !important;
+    }
+
+    /* Fix z-index for dropdown menu to ensure it appears above other content */
+    .offcanvas-body .dropdown-menu {
+        z-index: 1050 !important;
+    }
+
+    /* Fix backdrop opacity and z-index */
+    .offcanvas-backdrop {
+        z-index: 1032 !important;
+        opacity: 0.5 !important;
+        background-color: rgba(0,0,0,0.5) !important;
+    }
+
+    /* Make sure the dropdown menu appears properly */
+    .dropdown-toggle[aria-expanded="true"] + .dropdown-menu {
+        display: block !important;
+    }
+    
+    /* Position mobile cart button */
+    .mobile-cart {
+        position: absolute;
+        right: 80px;
+        top: 55%; /* IMPROVED: Changed from 50% to 55% to move down */
+        transform: translateY(-50%);
+        z-index: 1034;
+    }
+
+    /* Fix navbar padding for mobile */
+    .navbar .container-fluid {
+        padding-right: 70px;
+        position: relative;
+    }
+    
+    /* Position navbar toggle button */
+    .navbar-toggler {
+        position: absolute;
+        right: 15px;
+        top: 55%; /* IMPROVED: Changed from 50% to 55% to move down */
+        transform: translateY(-50%);
+    }
+    
+    /* Increase main content padding for mobile */
+    main {
+        padding-top: 105px !important;
+    }
+
+    /* Style offcanvas properly */
+    .offcanvas {
+        width: 300px;
+    }
+
+    .offcanvas-body {
+        padding: 1rem;
+    }
+
+    .nav-item {
+        width: 100%;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e9e2d9;
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+        border: none;
+        background: transparent;
+        padding-left: 1rem;
+    }
+    
+    /* Product columns for tablet */
+    .product-col {
+        width: 33.33%; /* 3 per row on smaller screens */
+    }
+    
+    /* Adjust hamburger menu positioning */
+    /* Center mobile menu content */
+    .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 2.5rem !important; /* IMPROVED: Changed from 1rem to 2.5rem to move content down */
+    }
+    
+    /* Reset navbar-nav margins and make it centered */
+    .offcanvas-body .navbar-nav {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        margin-top: 0.5rem !important; /* ADD: Extra spacing */
+    }
+    
+    /* Center each nav item */
+    .offcanvas-body .nav-item {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0.75rem 0 !important; /* IMPROVED: from 0.5rem to 0.75rem */
+    }
+    
+    /* Ensure dropdown items are centered */
+    .offcanvas-body .dropdown-menu {
+        width: 80% !important;
+        margin: 0.5rem auto !important; /* IMPROVED: Added margin */
+        padding-left: 0 !important;
+        background: transparent;
+    }
+}
+
+@media (max-width: 767px) {
+    .product-col {
+        width: 50%; /* 2 per row on mobile */
+    }
+    
+    /* Banner adaptations for mobile */
+    .banner-image {
+        height: 300px;
+    }
+    
+    .banner-overlay h1 {
+        font-size: 2rem;
+    }
+    
+    .banner-overlay h1:after {
+        width: 60px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .banner-overlay p {
+        font-size: 1rem;
+    }
+    
+    .banner-content {
+        max-width: 80%;
+    }
+}
+
+/* Small screen specific fixes */
+@media (max-width: 575.98px) {
+    /* Make logo smaller on very small screens */
+    .navbar-brand img {
+        max-height: 40px;
+        padding-top: 3px; /* ADDED: Fine-tune position */
+    }
+    
+    /* Adjust utility buttons for small screens */
+    .utility-btn {
+        padding: 2px 6px;
+        font-size: 11px;
+    }
+    
+    /* Product column for very small screens */
+    .product-col {
+        width: 100%; /* 1 per row on very small screens */
+    }
+    
+    /* Auth card padding adjustment */
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+    
+    /* Further adjustments for very small screens */
+    .navbar-toggler {
+        right: 10px; /* Less right margin on very small screens */
+    }
+    
+    .mobile-cart {
+        right: 70px; /* Less right margin on very small screens */
+    }
+}
+
+/* Prevent offcanvas from affecting mobile cart */
+body.offcanvas-active .mobile-cart {
+    display: none !important;
+}
+
+/* ==================================================
+   14. AJAX Search Dropdown Styling - IMPROVED
+   ================================================== */
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 0 0 0.25rem 0.25rem;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    z-index: 1050;
+    margin-top: 1px;
+    padding: 0;
+}
+
+.search-results-header {
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #777777;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9e2d9;
+    font-size: 14px;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444444;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.search-item:hover {
+    background-color: #f5f0e9;
+    text-decoration: none;
+    color: #444444;
+}
+
+.search-item-image {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.search-item-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.search-item-info {
+    flex: 1;
+}
+
+.search-item-name {
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #444444;
+    line-height: 1.3;
+}
+
+.search-item-price {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b77c52;
+}
+
+.search-no-results {
+    padding: 20px 15px;
+    text-align: center;
+    color: #777777;
+    font-size: 14px;
+}
+
+.search-view-all {
+    padding: 12px 15px;
+    text-align: center;
+    border-top: 1px solid #e9e2d9;
+    background-color: #f8f9fa;
+}
+
+.search-view-all a {
+    color: #b77c52;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+}
+
+.search-view-all a:hover {
+    text-decoration: underline;
+}
+
+/* Improved highlight style */
+.highlight {
+    background-color: rgba(183, 124, 82, 0.2);
+    padding: 0 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+#search-hints, #mobile-search-hints {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    z-index: 1050;
+    margin-top: 1px;
+    padding: 0;
+}
+
+.search-hint-header {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #777777;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9e2d9;
+}
+
+.search-hint-item {
+    display: flex;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    text-decoration: none;
+    color: #444444;
+    transition: background-color 0.2s ease;
+}
+
+.search-hint-item:hover {
+    background-color: #f5f0e9;
+    text-decoration: none;
+    color: #444444;
+}
+
+.search-hint-image {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.search-hint-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.search-hint-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.search-hint-title {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.search-hint-price {
+    font-weight: 600;
+    color: #b77c52;
+    font-size: 0.9rem;
+}
+
+.search-no-results {
+    padding: 15px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+.search-hint-footer {
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9e2d9;
+    text-align: center;
+}
+
+.search-all-btn {
+    color: #b77c52;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+}
+
+.search-all-btn:hover {
+    text-decoration: underline;
+}
+
+/* Form Validation Styles */
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.is-valid {
+    border-color: #198754 !important;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 5px;
+}
+
+.password-strength .progress {
+    margin-bottom: 5px;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+}
+
+.is-checking {
+    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Cpath fill="%23b77c52" d="M32 64C14.4 64 0 49.6 0 32S14.4 0 32 0s32 14.4 32 32-14.4 32-32 32zm0-58.7C17.3 5.3 5.3 17.3 5.3 32s12 26.7 26.7 26.7 26.7-12 26.7-26.7S46.7 5.3 32 5.3z"/%3E%3Cpath fill="%23b77c52" d="M32 48c-8.8 0-16-7.2-16-16s7.2-16 16-16 16 7.2 16 16-7.2 16-16 16zm0-26.7c-5.9 0-10.7 4.8-10.7 10.7s4.8 10.7 10.7 10.7 10.7-4.8 10.7-10.7-4.8-10.7-10.7-10.7z"/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    padding-right: 2.5rem !important;
+    animation: spin 1s linear infinite;
+}
+
+/* Mobile search dropdown positioning */
+@media (max-width: 991px) {
+    #mobile-search-hints {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        left: 0;
+        z-index: 1060;
+    }
+}
+
+/* Mobile search dropdown positioning */
+@media (max-width: 991px) {
+    .mobile-search {
+        position: relative;
+    }
+    
+    .mobile-search .search-results-dropdown {
+        top: calc(100% + 2px);
+    }
+}
+
+/* ==================================================
+   21. Small Smartphone Optimization (Width < 400px)
+   ================================================== */
+
+   @media (max-width: 399px) {
+    /* Adjust product cards for tiny screens */
+    .product-col {
+        width: 100% !important; /* Force single column layout */
+    }
+    
+    /* Make product cards more compact */
+    .product-card {
+        margin-bottom: 10px;
+    }
+    
+    .product-card .card-img-top {
+        height: 130px !important;
+    }
+    
+    .product-card .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    .product-card .card-title {
+        font-size: 0.9rem !important;
+        height: auto !important;
+        max-height: 40px;
+        overflow: hidden;
+    }
+    
+    /* Smaller font size for all buttons */
+    .btn {
+        font-size: 0.8rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    /* Navbar & Logo adjustments */
+    .navbar-brand {
+        max-width: 70% !important;
+    }
+    
+    .navbar-brand img {
+        max-height: 35px !important;
+    }
+    
+    /* Reduce header margins */
+    h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.3rem !important;
+    }
+    
+    h3 {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Make banner more compact */
+    .banner-image {
+        height: 150px !important;
+    }
+    
+    .banner-overlay h1 {
+        font-size: 1.3rem !important;
+    }
+    
+    .banner-overlay h1:after {
+        width: 50px !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .banner-overlay p {
+        font-size: 0.8rem !important;
+    }
+    
+    /* Adjust utility bar */
+    .utility-bar {
+        font-size: 10px !important;
+    }
+    
+    .utility-btn {
+        font-size: 10px !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Adjust spacing */
+    .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    .py-5 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    
+    .my-5 {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Adjust form inputs */
+    input, select, textarea {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Login & Registration forms */
+    .auth-card .card-body {
+        padding: 1rem !important;
+    }
+    
+    .auth-title {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Fix social login buttons */
+    .social-box {
+        font-size: 0.8rem !important;
+        padding: 8px !important;
+    }
+    
+    .social-login .col-6 {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    
+    /* Footer adjustments */
+    footer {
+        font-size: 0.8rem !important;
+        padding: 10px 5px !important;
+    }
+    
+    footer h5 {
+        font-size: 1rem !important;
+    }
+    
+    /* Adjust form controls for checkout */
+    .form-control {
+        padding: 0.375rem 0.5rem !important;
+    }
+    
+    /* Adjust pagination */
+    .pagination .page-link {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    /* Adjust product details page */
+    .product-detail-img {
+        height: auto !important;
+        max-height: 200px !important;
+    }
+    
+    /* Make quantity selector smaller */
+    .quantity-selector {
+        width: 80px !important;
+    }
+    
+    /* Fix cart page layout */
+    .cart-item {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .cart-item-image {
+        margin-bottom: 10px !important;
+    }
+}
+
+/* Specific portrait mode fixes for small phones */
+@media (max-width: 399px) and (orientation: portrait) {
+    /* Further reduce padding to maximize content space */
+    .container {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    
+    /* Remove unnecessary margins */
+    .card {
+        margin-bottom: 10px !important;
+    }
+    
+    /* Fix navbar height */
+    .navbar {
+        min-height: 45px !important;
+    }
+    
+    /* Push main content down to account for smaller navbar */
+    main {
+        padding-top: 70px !important;
+    }
+    
+    /* Optimize search bar */
+    .search-input {
+        height: 32px !important;
+    }
+    
+    /* Make dropdown menus manageable */
+    .dropdown-menu {
+        min-width: 200px !important;
+    }
+    
+    /* Fix search results dropdown */
+    .search-results-dropdown {
+        max-height: 300px !important;
+    }
+    
+    .search-item {
+        padding: 5px 8px !important;
+    }
+    
+    .search-item-image {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        margin-right: 8px !important;
+    }
+}
+
+/* Fix for extremely small devices (Galaxy Fold when folded, etc.) */
+@media (max-width: 280px) {
+    /* Force even smaller text */
+    body {
+        font-size: 12px !important;
+    }
+    
+    /* Further reduce button size */
+    .btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    /* Make the navbar brand even smaller */
+    .navbar-brand img {
+        max-height: 30px !important;
+    }
+    
+    /* Stack buttons in product details */
+    .product-buttons .btn {
+        margin-bottom: 5px !important;
+        width: 100% !important;
+    }
+    
+    /* Hide some elements if needed */
+    .navbar-brand span {
+        display: none !important;
+    }
+    
+    /* Fix auth cards */
+    .auth-card {
+        border-radius: 0 !important;
+    }
+    
+    /* Fix social login */
+    .social-login .row {
+        flex-direction: column !important;
+    }
+    
+    .social-login .col-6 {
+        width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+}
