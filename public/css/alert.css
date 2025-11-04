@@ -1,0 +1,49 @@
+/* Alert Progress Bar Animation */
+@keyframes alertFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Alert wrappers for proper positioning */
+.alert-container {
+    position: relative;
+}
+
+/* Custom progress bar animation */
+.alert-progress {
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.7);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transition: width 5s linear;
+}
+
+/* Make alerts appear more smoothly */
+.alert {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* Add some space for the progress bar */
+.alert {
+    padding-bottom: 1.2rem !important;
+}
+
+/* Alert color customization for progress bars */
+.alert-success .alert-progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.alert-danger .alert-progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.alert-warning .alert-progress {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.alert-info .alert-progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
