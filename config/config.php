@@ -3,8 +3,8 @@
 // General configuration settings
 
 // Site settings
-define('SITE_NAME', 'ChaBong Shop');
-define('SITE_URL', 'http://localhost/petshop/');
+define('SITE_NAME', 'Online Pet Shop');
+define('SITE_URL', 'http://localhost/onlinepetshop/');
 
 // Path settings
 define('BASE_PATH', dirname(__DIR__) . '/');
