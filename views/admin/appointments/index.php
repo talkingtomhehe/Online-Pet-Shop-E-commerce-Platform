@@ -16,7 +16,6 @@
     }
     ?>
 
-    <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card bg-primary text-white mb-4">
@@ -59,7 +58,6 @@
         </div>
     </div>
 
-    <!-- Filters -->
     <div class="card mb-4">
         <div class="card-header">
             <i class="bi bi-funnel me-1"></i>
@@ -98,7 +96,6 @@
         </div>
     </div>
 
-    <!-- Appointments Table -->
     <div class="card mb-4">
         <div class="card-header" style="background-color: #b77c52; color: white;">
             <i class="bi bi-list-ul me-1"></i>
@@ -204,32 +201,15 @@
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
                                         
-                                        <!-- View Notes Button -->
                                         <?php if (!empty($appointment['customer_notes'])): ?>
                                             <button type="button" class="btn btn-outline-secondary btn-sm" 
                                                     data-bs-toggle="modal" 
-                                                    data-bs-target="#notesModal<?= $appointment['id'] ?>"
+                                                    data-bs-target="#genericNoteModal"
+                                                    data-id="<?= $appointment['id'] ?>"
+                                                    data-note="<?= htmlspecialchars($appointment['customer_notes']) ?>"
                                                     title="View Notes">
                                                 <i class="bi bi-sticky"></i>
                                             </button>
-                                            
-                                            <!-- Notes Modal -->
-                                            <div class="modal fade" id="notesModal<?= $appointment['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header" style="background-color: #b77c52; color: white;">
-                                                            <h5 class="modal-title">Customer Notes - Appointment #<?= $appointment['id'] ?></h5>
-                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p><?= nl2br(htmlspecialchars($appointment['customer_notes'])) ?></p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -242,37 +222,63 @@
     </div>
 </div>
 
+<div class="modal fade" id="genericNoteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #b77c52; color: white;">
+                <h5 class="modal-title" id="noteModalTitle">Customer Notes</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="noteModalContent" style="white-space: pre-wrap;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .card-header {
-        font-weight: bold;
-    }
-    
-    .table th {
-        font-weight: 600;
-        color: #495057;
-    }
-    
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-    }
-    
-    .badge {
-        padding: 0.35em 0.65em;
-        font-weight: 500;
-    }
+    .card-header { font-weight: bold; }
+    .table th { font-weight: 600; color: #495057; }
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+    .badge { padding: 0.35em 0.65em; font-weight: 500; }
 </style>
 
 <script>
-// Optional: Add AJAX for status updates to avoid page reload
-document.querySelectorAll('form[action*="update-appointment-status"]').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        const status = this.querySelector('input[name="status"]').value;
-        const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-        
-        if (!confirm(`Are you sure you want to ${statusText.toLowerCase()} this appointment?`)) {
-            e.preventDefault();
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // 1. Logic for Status Update Confirmation
+    document.querySelectorAll('form[action*="update-appointment-status"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const status = this.querySelector('input[name="status"]').value;
+            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            
+            if (!confirm(`Are you sure you want to ${statusText.toLowerCase()} this appointment?`)) {
+                e.preventDefault();
+            }
+        });
     });
+
+    // 2. Logic for Generic Note Modal
+    const noteModal = document.getElementById('genericNoteModal');
+    if (noteModal) {
+        noteModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            const button = event.relatedTarget;
+            
+            // Extract info from data-* attributes
+            const noteContent = button.getAttribute('data-note');
+            const appointmentId = button.getAttribute('data-id');
+            
+            // Update the modal's content.
+            const modalTitle = noteModal.querySelector('#noteModalTitle');
+            const modalBody = noteModal.querySelector('#noteModalContent');
+
+            modalTitle.textContent = `Customer Notes - Appointment #${appointmentId}`;
+            modalBody.textContent = noteContent;
+        });
+    }
 });
 </script>
