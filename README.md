@@ -73,13 +73,13 @@ The application implements several modern web development techniques:
 
 - Start Apache and MySQL services from the XAMPP Control Panel
 - Place the project folder in the htdocs directory
-- Access the application via http://localhost/petshop/
+- Access the application via http://localhost/onlinepetshop/
 
 ## Access Credentials
 
 ### Admin Access
 
-- URL: http://localhost/petshop/admin/
+- URL: http://localhost/onlinepetshop/admin/
 - Username: `admin`
 - Password: `admin123`
 
@@ -94,7 +94,7 @@ The admin dashboard provides access to:
 
 ### Customer/User Access
 
-- URL: http://localhost/petshop/user/login
+- URL: http://localhost/onlinepetshop/user/login
 
 Demo User Accounts:
 
@@ -111,7 +111,7 @@ Demo User Accounts:
 
 You can also test the user registration system by creating a new account:
 
-- Navigate to http://localhost/petshop/user/signup
+- Navigate to http://localhost/onlinepetshop/user/signup
 - The registration form includes real-time validation for username and email availability
 
 ## Dependencies and Setup
@@ -128,7 +128,7 @@ This project uses Composer to manage PHP dependencies. If you encounter errors r
 2. Install dependencies:
 
    ```bash
-   cd /path/to/petshop
+   cd /path/to/onlinepetshop
    composer require google/apiclient:"^2.0"
    ```
 
@@ -157,6 +157,6 @@ This project uses environment variables for configuration. To set up:
 
 1. Create a project in Google Developer Console
 2. Set up OAuth credentials for Web Application
-3. Add authorized redirect URI: `http://localhost/petshop/user/google-callback` 
+3. Add authorized redirect URI: `http://localhost/onlinepetshop/user/google-callback` 
    (adjust based on your actual domain)
 4. Add credentials to your `.env` file

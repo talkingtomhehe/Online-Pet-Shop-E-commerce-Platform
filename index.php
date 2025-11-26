@@ -35,7 +35,7 @@ if (SessionManager::checkSessionTimeout(7200)) {
 
 // Parse the URL to determine controller and action
 $request = $_SERVER['REQUEST_URI'];
-$basePath = '/petshop/';
+$basePath = '/onlinepetshop/';
 
 // Remove base path from the request URI
 $request = str_replace($basePath, '', $request);
