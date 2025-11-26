@@ -872,4 +872,128 @@ class AdminController
         include VIEWS_PATH . 'admin/locations.php';
         include VIEWS_PATH . 'admin/layouts/footer.php';
     }
+
+    /*** APPOINTMENT MANAGEMENT ***/
+
+    public function appointments()
+    {
+        // Check if admin is logged in
+        $this->checkAdminAuth();
+
+        // Get filter parameter
+        $status = isset($_GET['status']) ? $_GET['status'] : '';
+        $date = isset($_GET['date']) ? $_GET['date'] : '';
+
+        // Pagination
+        $limit = 15;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        // Get appointments
+        require_once 'models/Appointment.php';
+        require_once 'config/database.php';
+        $database = new Database();
+        $db = $database->getConnection();
+        $appointmentModel = new Appointment($db);
+
+        // Build filters
+        $filters = [];
+        if (!empty($status)) {
+            $filters['status'] = $status;
+        }
+        if (!empty($date)) {
+            $filters['date'] = $date;
+        }
+
+        // Get all appointments (we'll handle pagination in the view if needed)
+        $appointments = $appointmentModel->getAllAppointments($filters);
+
+        // Count appointments for statistics
+        $allAppointments = $appointmentModel->getAllAppointments([]);
+        $totalAppointments = count($allAppointments);
+        $pendingCount = count(array_filter($allAppointments, function ($a) {
+            return $a['status'] === 'pending';
+        }));
+        $confirmedCount = count(array_filter($allAppointments, function ($a) {
+            return $a['status'] === 'confirmed';
+        }));
+
+        // Page title
+        $pageTitle = 'Manage Appointments';
+
+        // Load view
+        include VIEWS_PATH . 'admin/layouts/header.php';
+        include VIEWS_PATH . 'admin/appointments/index.php';
+        include VIEWS_PATH . 'admin/layouts/footer.php';
+    }
+
+    public function updateAppointmentStatus()
+    {
+        // Check if admin is logged in
+        $this->checkAdminAuth();
+
+        // Check for request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
+            $id = (int)$_POST['id'];
+            $status = $_POST['status'];
+
+            // Validate status
+            $validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+            if (!in_array($status, $validStatuses)) {
+                // Handle AJAX vs regular form submission
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Invalid status']);
+                } else {
+                    $_SESSION['admin_message'] = [
+                        'type' => 'error',
+                        'text' => 'Invalid status'
+                    ];
+                    header('Location: ' . SITE_URL . 'admin/appointments');
+                }
+                exit;
+            }
+
+            require_once 'models/Appointment.php';
+            require_once 'config/database.php';
+            $database = new Database();
+            $db = $database->getConnection();
+            $appointmentModel = new Appointment($db);
+
+            // Update appointment status
+            $result = $appointmentModel->updateStatus($id, $status);
+
+            if ($result) {
+                $statusText = ucfirst($status);
+                // Handle AJAX vs regular form submission
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => "Appointment {$statusText} successfully"]);
+                } else {
+                    $_SESSION['admin_message'] = [
+                        'type' => 'success',
+                        'text' => "Appointment {$statusText} successfully"
+                    ];
+                    header('Location: ' . SITE_URL . 'admin/appointments');
+                }
+            } else {
+                // Handle AJAX vs regular form submission
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Failed to update appointment status']);
+                } else {
+                    $_SESSION['admin_message'] = [
+                        'type' => 'error',
+                        'text' => 'Failed to update appointment status'
+                    ];
+                    header('Location: ' . SITE_URL . 'admin/appointments');
+                }
+            }
+            exit;
+        }
+
+        // Redirect to appointments page
+        header('Location: ' . SITE_URL . 'admin/appointments');
+        exit;
+    }
 }
