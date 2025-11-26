@@ -3,7 +3,6 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="card-title mb-0">All Orders</h5>
 
-            <!-- Status filter -->
             <div class="btn-group">
                 <a href="<?php echo SITE_URL; ?>admin/orders" class="btn <?php echo empty($_GET['status']) ? 'btn-primary' : 'btn-outline-primary'; ?>">
                     All
@@ -76,6 +75,19 @@
                                     <a href="<?php echo SITE_URL; ?>admin/order-detail/<?php echo $order['id']; ?>" class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i> View
                                     </a>
+                                    
+                                    <?php if ($order['status'] === 'cancelled' && !empty($order['cancellation_reason'])): ?>
+                                        <button type="button" class="btn btn-sm btn-outline-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#cancellationModal"
+                                                data-id="<?php echo $order['id']; ?>"
+                                                data-customer="<?php echo htmlspecialchars($order['name']); ?>"
+                                                data-date="<?php echo date('M j, Y, g:i a', strtotime($order['created_at'])); ?>"
+                                                data-reason="<?php echo htmlspecialchars($order['cancellation_reason']); ?>"
+                                                title="View Cancellation Reason">
+                                            <i class="bi bi-info-circle"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -87,9 +99,56 @@
                 </tbody>
             </table>
         </div>
+        
         <?php
         // Include pagination
         include VIEWS_PATH . 'shared/pagination.php';
         ?>
     </div>
 </div>
+
+<div class="modal fade" id="cancellationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Cancellation Reason - Order #<span id="modalOrderId"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-1"><strong>Customer:</strong> <span id="modalCustomer"></span></p>
+                <p class="mb-3"><strong>Order Date:</strong> <span id="modalDate"></span></p>
+                <hr>
+                <p class="mb-1"><strong>Reason:</strong></p>
+                <p id="modalReason" style="white-space: pre-wrap;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var cancellationModal = document.getElementById('cancellationModal');
+    
+    if (cancellationModal) {
+        cancellationModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget;
+            
+            // Extract info from data-* attributes
+            var orderId = button.getAttribute('data-id');
+            var customer = button.getAttribute('data-customer');
+            var date = button.getAttribute('data-date');
+            var reason = button.getAttribute('data-reason');
+            
+            // Update the modal's content
+            cancellationModal.querySelector('#modalOrderId').textContent = orderId;
+            cancellationModal.querySelector('#modalCustomer').textContent = customer;
+            cancellationModal.querySelector('#modalDate').textContent = date;
+            cancellationModal.querySelector('#modalReason').textContent = reason;
+        });
+    }
+});
+</script>

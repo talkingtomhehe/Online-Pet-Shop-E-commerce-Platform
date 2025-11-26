@@ -119,6 +119,8 @@ switch ($controller) {
             $userController->orderDetail($id);
         } elseif ($action === 'update-avatar') {
             $userController->updateAvatar();
+        } elseif ($action === 'cancel-order') {
+            $userController->cancelOrder();
         } else {
             $userController->login();
         }

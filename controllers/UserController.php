@@ -449,4 +449,55 @@ class UserController {
         header('Location: ' . SITE_URL . 'user/login');
         exit;
     }
+
+    /**
+     * Cancel an order
+     * Handles POST request to cancel a pending order
+     */
+    public function cancelOrder() {
+        // Check if user is logged in
+        if (!SessionManager::isUserLoggedIn()) {
+            $_SESSION['error_message'] = 'Please log in to cancel an order.';
+            header('Location: ' . SITE_URL . 'user/login');
+            exit;
+        }
+
+        // Only handle POST requests
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . SITE_URL . 'user/orders');
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $orderId = isset($_POST['order_id']) ? (int)$_POST['order_id'] : 0;
+        $reason = isset($_POST['cancellation_reason']) ? trim($_POST['cancellation_reason']) : '';
+
+        // Validate inputs
+        if ($orderId <= 0) {
+            $_SESSION['error_message'] = 'Invalid order ID.';
+            header('Location: ' . SITE_URL . 'user/orders');
+            exit;
+        }
+
+        if (empty($reason)) {
+            $_SESSION['error_message'] = 'Please select a cancellation reason.';
+            header('Location: ' . SITE_URL . 'user/order-detail/' . $orderId);
+            exit;
+        }
+
+        // Attempt to cancel the order
+        require_once 'models/Order.php';
+        $orderModel = new Order();
+        $result = $orderModel->cancelOrder($orderId, $userId, $reason);
+
+        // Set message and redirect
+        if ($result['success']) {
+            $_SESSION['success_message'] = $result['message'];
+        } else {
+            $_SESSION['error_message'] = $result['message'];
+        }
+
+        header('Location: ' . SITE_URL . 'user/order-detail/' . $orderId);
+        exit;
+    }
 }
