@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 26, 2025 lúc 12:25 PM
+-- Thời gian đã tạo: Th10 26, 2025 lúc 01:51 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -69,7 +69,8 @@ CREATE TABLE `appointments` (
 INSERT INTO `appointments` (`id`, `user_id`, `service_id`, `staff_id`, `appointment_date`, `appointment_time`, `status`, `customer_notes`, `created_at`, `updated_at`) VALUES
 (1, 1, 4, 1, '2025-11-27', '09:00:00', 'completed', '', '2025-11-26 11:10:12', '2025-11-26 11:21:57'),
 (2, 1, 8, 2, '2025-11-27', '10:00:00', 'cancelled', '', '2025-11-26 11:14:21', '2025-11-26 11:21:42'),
-(3, 1, 7, 1, '2025-11-27', '10:00:00', 'cancelled', 'Maybe I will be 15 minutes late.', '2025-11-26 11:17:40', '2025-11-26 11:19:45');
+(3, 1, 7, 1, '2025-11-27', '10:00:00', 'cancelled', 'Maybe I will be 15 minutes late.', '2025-11-26 11:17:40', '2025-11-26 11:19:45'),
+(4, 1, 1, 1, '2025-11-27', '10:30:00', 'confirmed', 'I will be there.', '2025-11-26 11:35:14', '2025-11-26 11:35:33');
 
 -- --------------------------------------------------------
 
@@ -90,8 +91,7 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `user_id`, `product_id`, `quantity`, `created_at`) VALUES
-(13, 2, 10, 1, '2025-04-06 17:45:06'),
-(16, 1, 11, 1, '2025-04-22 17:45:40');
+(13, 2, 10, 1, '2025-04-06 17:45:06');
 
 -- --------------------------------------------------------
 
@@ -133,6 +133,7 @@ CREATE TABLE `orders` (
   `phone` varchar(20) DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `status` enum('pending','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  `cancellation_reason` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -141,11 +142,12 @@ CREATE TABLE `orders` (
 -- Đang đổ dữ liệu cho bảng `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `name`, `email`, `address`, `city`, `postal_code`, `phone`, `total_amount`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 115.96, 'delivered', '2025-04-05 23:01:04', '2025-04-05 23:24:01'),
-(2, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 9.99, 'delivered', '2025-04-05 23:23:33', '2025-04-06 17:36:26'),
-(3, 2, 'user2', 'user2@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 23.98, 'pending', '2025-04-06 02:03:42', '2025-04-06 02:03:42'),
-(4, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1112', '32434324', 115.97, 'processing', '2025-04-19 20:57:23', '2025-04-22 19:52:15');
+INSERT INTO `orders` (`id`, `user_id`, `name`, `email`, `address`, `city`, `postal_code`, `phone`, `total_amount`, `status`, `cancellation_reason`, `created_at`, `updated_at`) VALUES
+(1, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 115.96, 'delivered', NULL, '2025-04-05 23:01:04', '2025-04-05 23:24:01'),
+(2, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 9.99, 'delivered', NULL, '2025-04-05 23:23:33', '2025-04-06 17:36:26'),
+(3, 2, 'user2', 'user2@gmail.com', '68/2A', 'tphcm', '1111', '32434324', 23.98, 'pending', NULL, '2025-04-06 02:03:42', '2025-04-06 02:03:42'),
+(4, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1112', '32434324', 115.97, 'shipped', NULL, '2025-04-19 20:57:23', '2025-11-26 12:49:36'),
+(5, 1, 'user1 nguyen', 'user1@gmail.com', '68/2A', 'tphcm', '1112', '32434324', 159.98, 'cancelled', 'Found a better price', '2025-11-26 12:35:26', '2025-11-26 12:44:57');
 
 -- --------------------------------------------------------
 
@@ -171,7 +173,8 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (3, 2, 5, 1, 9.99),
 (4, 3, 8, 2, 11.99),
 (5, 4, 12, 2, 17.99),
-(6, 4, 11, 1, 79.99);
+(6, 4, 11, 1, 79.99),
+(7, 5, 11, 2, 79.99);
 
 -- --------------------------------------------------------
 
@@ -314,7 +317,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `full_name`, `phone`, `address`, `city`, `postal_code`, `updated_at`, `state`, `last_activity`, `last_login`, `avatar`, `google_id`, `remember_token`, `token_expires`) VALUES
-(1, 'user1', 'user1@gmail.com', '$2y$10$2MzpotsMrUbSAx5TYkMfQufy7IRwBubWIlI4g/ZCfrbnNqzyvVcAC', '2025-04-04 21:49:36', 'user1 nguyen', '32434324', '68/2A', 'tphcm', '1112', '2025-11-26 11:22:06', NULL, '2025-11-26 11:22:06', '2025-04-22 17:44:10', 'public/images/avatars/avatar_1_67f1c09bb795b.jpg', NULL, NULL, NULL),
+(1, 'user1', 'user1@gmail.com', '$2y$10$2MzpotsMrUbSAx5TYkMfQufy7IRwBubWIlI4g/ZCfrbnNqzyvVcAC', '2025-04-04 21:49:36', 'user1 nguyen', '32434324', '68/2A', 'tphcm', '1112', '2025-11-26 12:50:22', NULL, '2025-11-26 12:50:22', '2025-11-26 11:34:34', 'public/images/avatars/avatar_1_67f1c09bb795b.jpg', NULL, NULL, NULL),
 (2, 'user2', 'user2@gmail.com', '$2y$10$6J4TvmWFCA2o08k4QamEy.5U7BaB5XAe4goou2BVaq2TEKZmyiSgS', '2025-04-05 17:00:17', NULL, NULL, NULL, NULL, NULL, '2025-04-06 22:59:19', NULL, '2025-04-06 22:59:19', NULL, 'public/images/avatars/avatar_2_67f1e05ab1d89.jpg', NULL, NULL, NULL),
 (3, 'phankhanhnhan01', 'phankhanhnhan01@gmail.com', '$2y$10$V2WKQTjIfSplFNKbheTSuuDTXYlMtncDEDQWhZzYI4w/eLeI770wS', '2025-04-06 01:32:38', 'Nhân Phan', NULL, NULL, NULL, NULL, '2025-04-22 20:58:35', NULL, '2025-04-22 20:58:35', '2025-04-22 20:35:15', 'https://lh3.googleusercontent.com/a/ACg8ocIbDIbyks-c0qGWVK-Vq44Xfus5vtRh0ro4k6aVLnHAORBIdg=s96-c', '103729317953199544120', NULL, NULL);
 
@@ -416,7 +419,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT cho bảng `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `cart_items`
@@ -434,13 +437,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `products`

@@ -152,4 +152,90 @@ class Order
 
         return $this->db->query($sql);
     }
+
+    /**
+     * Cancel an order
+     * Verifies ownership, status, updates to cancelled, saves reason, and restores stock
+     * 
+     * @param int $orderId Order ID to cancel
+     * @param int $userId User ID requesting cancellation
+     * @param string $reason Cancellation reason
+     * @return array Result with success status and message
+     */
+    public function cancelOrder($orderId, $userId, $reason)
+    {
+        $orderId = (int)$orderId;
+        $userId = (int)$userId;
+        $reason = $this->db->real_escape_string($reason);
+
+        // Step 1: Verify the order belongs to the user
+        $sql = "SELECT id, user_id, status FROM {$this->table} WHERE id = {$orderId}";
+        $result = $this->db->query($sql);
+
+        if (!$result || $result->num_rows === 0) {
+            return [
+                'success' => false,
+                'message' => 'Order not found.'
+            ];
+        }
+
+        $order = $result->fetch_assoc();
+
+        // Verify ownership
+        if ($order['user_id'] != $userId) {
+            return [
+                'success' => false,
+                'message' => 'You do not have permission to cancel this order.'
+            ];
+        }
+
+        // Step 2: Verify the current status is 'pending'
+        if ($order['status'] !== 'pending') {
+            return [
+                'success' => false,
+                'message' => 'Only pending orders can be cancelled. This order is already ' . $order['status'] . '.'
+            ];
+        }
+
+        // Step 3: Get order items to restore stock
+        $itemsSql = "SELECT product_id, quantity FROM order_items WHERE order_id = {$orderId}";
+        $itemsResult = $this->db->query($itemsSql);
+
+        if (!$itemsResult) {
+            return [
+                'success' => false,
+                'message' => 'Failed to retrieve order items.'
+            ];
+        }
+
+        // Step 4: Update order status and save cancellation reason
+        $updateSql = "UPDATE {$this->table} 
+                      SET status = 'cancelled', cancellation_reason = '{$reason}' 
+                      WHERE id = {$orderId}";
+
+        if (!$this->db->query($updateSql)) {
+            return [
+                'success' => false,
+                'message' => 'Failed to cancel order. Please try again.'
+            ];
+        }
+
+        // Step 5: Restore stock levels for each product
+        require_once 'models/Product.php';
+        $productModel = new Product();
+
+        while ($item = $itemsResult->fetch_assoc()) {
+            $productId = (int)$item['product_id'];
+            $quantity = (int)$item['quantity'];
+
+            // Restore stock by adding back the quantity
+            $stockSql = "UPDATE products SET stock = stock + {$quantity} WHERE id = {$productId}";
+            $this->db->query($stockSql);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Order has been successfully cancelled and stock has been restored.'
+        ];
+    }
 }
