@@ -224,6 +224,11 @@
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?php echo SITE_URL; ?>admin/appointments" class="nav-link <?php echo ($pageTitle == 'Manage Appointments') ? 'active' : ''; ?>">
+                                <i class="bi bi-calendar-check"></i> Appointments
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?php echo SITE_URL; ?>admin/locations" class="nav-link <?php echo ($pageTitle == 'Store Locations') ? 'active' : ''; ?>">
                                 <i class="bi bi-geo-alt me-2"></i> Store Locations

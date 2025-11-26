@@ -44,11 +44,18 @@ $request = str_replace($basePath, '', $request);
 $requestParts = explode('?', $request);
 $path = $requestParts[0];
 
-// Parse the URL path
-$urlParts = explode('/', $path);
-$controller = isset($urlParts[0]) && !empty($urlParts[0]) ? $urlParts[0] : 'home';
-$action = isset($urlParts[1]) && !empty($urlParts[1]) ? $urlParts[1] : 'index';
-$id = isset($urlParts[2]) ? $urlParts[2] : null;
+// Check if using query string routing (index.php?page=controller&action=action)
+if (isset($_GET['page'])) {
+    $controller = $_GET['page'];
+    $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+    $id = isset($_GET['id']) ? $_GET['id'] : null;
+} else {
+    // Parse the URL path
+    $urlParts = explode('/', $path);
+    $controller = isset($urlParts[0]) && !empty($urlParts[0]) ? $urlParts[0] : 'home';
+    $action = isset($urlParts[1]) && !empty($urlParts[1]) ? $urlParts[1] : 'index';
+    $id = isset($urlParts[2]) ? $urlParts[2] : null;
+}
 
 // Clean the parameters
 $controller = strtolower(strip_tags($controller));
@@ -117,6 +124,18 @@ switch ($controller) {
         }
         break;
 
+    case 'signin':
+        require_once 'controllers/UserController.php';
+        $userController = new UserController();
+        $userController->login();
+        break;
+
+    case 'signup':
+        require_once 'controllers/UserController.php';
+        $userController = new UserController();
+        $userController->signup();
+        break;
+
     case 'admin':
         require_once 'controllers/AdminController.php';
         $adminController = new AdminController();
@@ -165,9 +184,36 @@ switch ($controller) {
             $adminController->updateOrderStatus();
         } elseif ($action === 'locations') {
             $adminController->locations();
+        }
+        // Appointments management
+        elseif ($action === 'appointments') {
+            $adminController->appointments();
+        } elseif ($action === 'update-appointment-status') {
+            $adminController->updateAppointmentStatus();
         } else {
             $adminController->login();
         }
+        break;
+
+    case 'booking':
+        require_once 'controllers/BookingController.php';
+        $bookingController = new BookingController();
+
+        if ($action === 'index') {
+            $bookingController->index();
+        } elseif ($action === 'check-availability') {
+            $bookingController->checkAvailability();
+        } elseif ($action === 'store') {
+            $bookingController->store();
+        } else {
+            $bookingController->index();
+        }
+        break;
+
+    case 'user-appointments':
+        require_once 'controllers/BookingController.php';
+        $bookingController = new BookingController();
+        $bookingController->myAppointments();
         break;
 
     case 'cart':

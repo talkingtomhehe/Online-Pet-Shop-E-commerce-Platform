@@ -54,6 +54,9 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                             <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>user/orders">
                                 <i class="bi bi-box-seam me-2"></i> My Orders
                             </a></li>
+                            <li><a class="dropdown-item" href="index.php?page=user-appointments">
+                                <i class="bi bi-calendar-check me-2"></i> My Appointments
+                            </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="<?php echo SITE_URL; ?>user/logout">
                                 <i class="bi bi-box-arrow-right me-2"></i> Logout
@@ -133,6 +136,12 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                                     <?php endif; ?>
                                     <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>products">All Products</a></li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?php echo ($pageTitle == 'Book a Spa Appointment' || $controller == 'booking') ? 'active' : ''; ?>" href="index.php?page=booking">
+                                    Spa Booking
+                                    <!--<i class="bi bi-scissors me-1"></i> Spa Booking-->
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link <?php echo ($pageTitle == 'Contact Us') ? 'active' : ''; ?>" href="<?php echo SITE_URL; ?>contact">
