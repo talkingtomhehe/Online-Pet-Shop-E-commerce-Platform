@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         usernameField.classList.add('is-checking');
         
         // Create URL with query parameter
-        const url = new URL(window.location.origin + '/petshop/ajax/check-username');
+        const url = new URL(window.location.origin + '/onlinepetshop/ajax/check-username');
         url.searchParams.append('username', username);
         
         fetch(url)
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
         emailField.classList.add('is-checking');
         
         // Create URL with query parameter
-        const url = new URL(window.location.origin + '/petshop/ajax/check-email');
+        const url = new URL(window.location.origin + '/onlinepetshop/ajax/check-email');
         url.searchParams.append('email', email);
         
         fetch(url)

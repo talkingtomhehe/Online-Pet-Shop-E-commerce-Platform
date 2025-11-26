@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 22, 2025 lúc 10:59 PM
+-- Thời gian đã tạo: Th10 26, 2025 lúc 10:38 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -42,6 +42,23 @@ CREATE TABLE `admins` (
 
 INSERT INTO `admins` (`id`, `username`, `password`, `created_at`, `remember_token`, `token_expires`) VALUES
 (1, 'admin', '$2y$10$Tn/0xi2s.OElsEgYTieQX.mcyzYyuBcGYHB8f3eQKkaBH8JRvhh8e', '2025-04-04 22:17:42', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `appointments`
+--
+
+CREATE TABLE `appointments` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  `appointment_date` datetime NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `status` enum('pending','confirmed','completed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,6 +104,20 @@ INSERT INTO `categories` (`id`, `name`, `description`) VALUES
 (3, 'Toys', NULL),
 (4, 'Bath', NULL),
 (5, 'Accessories', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -184,6 +215,52 @@ INSERT INTO `products` (`id`, `name`, `description`, `price`, `image_url`, `stoc
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `services`
+--
+
+CREATE TABLE `services` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `duration_minutes` int(11) DEFAULT 60,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `services`
+--
+
+INSERT INTO `services` (`id`, `name`, `price`, `duration_minutes`, `description`) VALUES
+(1, 'Full Grooming', 25.00, 60, 'Bath, haircut, and nail trim'),
+(2, 'Pet Spa & Massage', 40.00, 60, 'Relaxing massage and aromatic bath'),
+(3, 'Health Checkup', 15.00, 60, 'Basic health screening at home');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `staff`
+--
+
+CREATE TABLE `staff` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `role` varchar(50) DEFAULT 'groomer',
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `staff`
+--
+
+INSERT INTO `staff` (`id`, `name`, `email`, `role`, `is_active`) VALUES
+(1, 'Alice Smith', 'alice@woofwoof.com', 'Groomer', 1),
+(2, 'Bob Jones', 'bob@woofwoof.com', 'Trainer', 1),
+(3, 'Dr. Sarah Lee', 'sarah@woofwoof.com', 'Veterinarian', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `store_locations`
 --
 
@@ -231,9 +308,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `full_name`, `phone`, `address`, `city`, `postal_code`, `updated_at`, `state`, `last_activity`, `last_login`, `avatar`, `google_id`, `remember_token`, `token_expires`) VALUES
-(1, 'user1', 'user1@gmail.com', '$2y$10$2MzpotsMrUbSAx5TYkMfQufy7IRwBubWIlI4g/ZCfrbnNqzyvVcAC', '2025-04-04 21:49:36', 'user1 nguyen', '32434324', '68/2A', 'tphcm', '1112', '2025-04-22 19:22:40', NULL, '2025-04-22 19:22:40', '2025-04-22 17:44:10', 'public/images/avatars/avatar_1_67f1c09bb795b.jpg', NULL, NULL, NULL),
+(1, 'user1', 'user1@gmail.com', '$2y$10$2MzpotsMrUbSAx5TYkMfQufy7IRwBubWIlI4g/ZCfrbnNqzyvVcAC', '2025-04-04 21:49:36', 'user1 nguyen', '32434324', '68/2A', 'tphcm', '1112', '2025-11-26 09:36:09', NULL, '2025-11-26 09:36:09', '2025-11-26 09:34:02', 'public/images/avatars/avatar_1_67f1c09bb795b.jpg', NULL, NULL, NULL),
 (2, 'user2', 'user2@gmail.com', '$2y$10$6J4TvmWFCA2o08k4QamEy.5U7BaB5XAe4goou2BVaq2TEKZmyiSgS', '2025-04-05 17:00:17', NULL, NULL, NULL, NULL, NULL, '2025-04-06 22:59:19', NULL, '2025-04-06 22:59:19', NULL, 'public/images/avatars/avatar_2_67f1e05ab1d89.jpg', NULL, NULL, NULL),
-(3, 'phankhanhnhan01', 'phankhanhnhan01@gmail.com', '$2y$10$V2WKQTjIfSplFNKbheTSuuDTXYlMtncDEDQWhZzYI4w/eLeI770wS', '2025-04-06 01:32:38', 'Nhân Phan', NULL, NULL, NULL, NULL, '2025-04-22 20:58:35', NULL, '2025-04-22 20:58:35', '2025-04-22 20:35:15', 'https://lh3.googleusercontent.com/a/ACg8ocIbDIbyks-c0qGWVK-Vq44Xfus5vtRh0ro4k6aVLnHAORBIdg=s96-c', '103729317953199544120', NULL, NULL);
+(3, 'phankhanhnhan01', 'phankhanhnhan01@gmail.com', '$2y$10$V2WKQTjIfSplFNKbheTSuuDTXYlMtncDEDQWhZzYI4w/eLeI770wS', '2025-04-06 01:32:38', 'Nhân Phan', NULL, NULL, NULL, NULL, '2025-11-26 09:29:08', NULL, '2025-11-26 09:29:08', '2025-11-26 09:28:28', 'https://lh3.googleusercontent.com/a/ACg8ocIbDIbyks-c0qGWVK-Vq44Xfus5vtRh0ro4k6aVLnHAORBIdg=s96-c', '103729317953199544120', NULL, NULL);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -245,6 +322,15 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `full_
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Chỉ mục cho bảng `appointments`
+--
+ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `service_id` (`service_id`),
+  ADD KEY `staff_id` (`staff_id`);
 
 --
 -- Chỉ mục cho bảng `cart_items`
@@ -259,6 +345,13 @@ ALTER TABLE `cart_items`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `orders`
@@ -281,6 +374,18 @@ ALTER TABLE `order_items`
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD KEY `products_category_fk` (`category_id`);
+
+--
+-- Chỉ mục cho bảng `services`
+--
+ALTER TABLE `services`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `staff`
+--
+ALTER TABLE `staff`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Chỉ mục cho bảng `store_locations`
@@ -307,6 +412,12 @@ ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT cho bảng `appointments`
+--
+ALTER TABLE `appointments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `cart_items`
 --
 ALTER TABLE `cart_items`
@@ -317,6 +428,12 @@ ALTER TABLE `cart_items`
 --
 ALTER TABLE `categories`
   MODIFY `id` int(30) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
@@ -337,6 +454,18 @@ ALTER TABLE `products`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
+-- AUTO_INCREMENT cho bảng `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `staff`
+--
+ALTER TABLE `staff`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT cho bảng `store_locations`
 --
 ALTER TABLE `store_locations`
@@ -353,11 +482,25 @@ ALTER TABLE `users`
 --
 
 --
+-- Các ràng buộc cho bảng `appointments`
+--
+ALTER TABLE `appointments`
+  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appointments_ibfk_3` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `cart_items`
 --
 ALTER TABLE `cart_items`
   ADD CONSTRAINT `cart_product_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `cart_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `orders`
@@ -382,16 +525,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-CREATE TABLE `appointments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `pet_name` varchar(100) NOT NULL,
-  `service_type` enum('grooming','checkup','vaccination','boarding') NOT NULL,
-  `appointment_date` datetime NOT NULL,
-  `status` enum('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',
-  `notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
