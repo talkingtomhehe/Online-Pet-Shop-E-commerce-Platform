@@ -156,6 +156,12 @@ switch ($controller) {
         } elseif ($action === 'get-online-users') {
             $adminController->getOnlineUsers();
         }
+        //cs22 booking management
+        elseif ($action === 'appointments') {
+            $adminController->appointments();
+        } elseif ($action === 'update-appointment-status') {
+            $adminController->updateAppointmentStatus();
+        }
         // Order management
         elseif ($action === 'orders') {
             $adminController->orders();
@@ -197,6 +203,18 @@ switch ($controller) {
             $ajaxController->checkUsername();
         } elseif ($action === 'check-email') {
             $ajaxController->checkEmail();
+        }
+        break;
+    case 'appointments':
+        require_once 'controllers/AppointmentController.php';
+        $apptController = new AppointmentController();
+        
+        if ($action === 'book') {
+            $apptController->book();
+        } elseif ($action === 'my-appointments') {
+            $apptController->myAppointments();
+        } else {
+            $apptController->index();
         }
         break;
 

@@ -872,4 +872,56 @@ class AdminController
         include VIEWS_PATH . 'admin/locations.php';
         include VIEWS_PATH . 'admin/layouts/footer.php';
     }
+    // Add to AdminController.php
+
+    /*** APPOINTMENT MANAGEMENT ***/
+
+    public function appointments()
+    {
+        $this->checkAdminAuth();
+        
+        require_once 'models/Appointment.php';
+        $appointmentModel = new Appointment();
+
+        // Pagination logic
+        $limit = 10;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $appointments = $appointmentModel->getAll($limit, $offset);
+        $totalAppointments = $appointmentModel->countAppointments();
+        $totalPages = ceil($totalAppointments / $limit);
+
+        $urlFunction = function ($page) {
+            return $this->getPaginationUrl(SITE_URL . 'admin/appointments', $page);
+        };
+        $currentPage = $page;
+
+        $pageTitle = 'Manage Appointments';
+        
+        // You need to create this view file
+        include VIEWS_PATH . 'admin/layouts/header.php';
+        include VIEWS_PATH . 'admin/appointments/index.php';
+        include VIEWS_PATH . 'admin/layouts/footer.php';
+    }
+
+    public function updateAppointmentStatus()
+    {
+        $this->checkAdminAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
+            require_once 'models/Appointment.php';
+            $appointmentModel = new Appointment();
+            
+            $id = (int)$_POST['id'];
+            $status = $_POST['status'];
+
+            if ($appointmentModel->updateStatus($id, $status)) {
+                echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+            }
+            exit;
+        }
+    }
 }
