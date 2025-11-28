@@ -3,6 +3,7 @@ require_once 'models/Admin.php';
 require_once 'models/Category.php';
 require_once 'models/Product.php';
 require_once 'models/User.php';
+use \models\Notification; // if namespace used; otherwise require_once models/Notification.php
 
 class AdminController
 {
@@ -755,6 +756,14 @@ class AdminController
             $result = $orderModel->updateStatus($id, $status);
 
             if ($result) {
+                // Load Notification model and create notification for user
+                require_once 'models/Notification.php';
+                $db = new Database(); // reuse same as other controllers
+                $notification = new Notification($db->getConnection());
+
+                $message = "Your order #{$id} status has been updated to {$status}.";
+                $notification->create($orderUserId, 'order', $orderId, $message);
+
                 echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to update order status']);

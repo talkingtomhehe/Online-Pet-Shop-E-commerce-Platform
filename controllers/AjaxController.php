@@ -65,4 +65,31 @@ class AjaxController
         echo json_encode($response);
         exit;
     }
+
+    /**
+     * Mark notification as read
+     */
+    public function markNotificationRead()
+    {
+        if (!SessionManager::isUserLoggedIn()) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+        parse_str(file_get_contents("php://input"), $post);
+        $id = isset($post['id']) ? (int)$post['id'] : 0;
+        require_once 'models/Notification.php';
+        $db = new Database();
+        $notification = new Notification($db->getConnection());
+        $userId = $_SESSION['user_id'];
+
+        if ($id === 0) {
+            $success = $notification->markAllRead($userId);
+        } else {
+            $success = $notification->markAsRead($id, $userId);
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['success' => (bool)$success]);
+        exit;
+    }
 }

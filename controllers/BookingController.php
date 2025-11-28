@@ -156,6 +156,14 @@ class BookingController {
         
         if ($appointmentId) {
             $_SESSION['success_message'] = 'Your appointment request has been submitted successfully! We will review and confirm your booking shortly.';
+            
+            // Notify user about the new booking
+            require_once 'models/Notification.php';
+            $db = new Database();
+            $notification = new Notification($db->getConnection());
+            $message = "Your Pet Spa booking #{$appointmentId} has been placed.";
+            $notification->create($userId, 'booking', $appointmentId, $message);
+
             header('Location: index.php?page=user-appointments');
         } else {
             $_SESSION['error_message'] = 'Failed to create appointment. Please try again.';

@@ -58,3 +58,69 @@
         </div>
     </div>
 </section>
+
+<div class="top-bar">
+    <!-- ...existing nav / header ... -->
+</div>
+
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('notification-toggle');
+    var dropdown = document.getElementById('notification-dropdown');
+    var badge = document.getElementById('notification-badge');
+
+    if (toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+
+    document.addEventListener('click', function() {
+        if (dropdown) dropdown.style.display = 'none';
+    });
+
+    // Handle clicking a notification: mark as read and navigate
+    var items = document.querySelectorAll('.notification-item');
+        items.forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                var notificationId = this.getAttribute('data-id');
+            var href = this.getAttribute('href');
+
+            // call AJAX mark-read
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '<?php echo SITE_URL; ?>ajax/mark-notification-read', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        // navigate after marking
+                        window.location.href = href;
+                    }
+                };
+                xhr.send('id=' + encodeURIComponent(notificationId));
+            });
+        });
+
+    var markAllBtn = document.getElementById('mark-all-read');
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '<?php echo SITE_URL; ?>ajax/mark-notification-read', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // Send id=0 to mark all (AjaxController can interpret 0)
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (badge) badge.style.display = 'none';
+                    var items = document.querySelectorAll('.notification-item');
+                    items.forEach(function(it){
+                        it.style.opacity = 0.7;
+                    });
+                }
+            };
+            xhr.send('id=0'); // mark all read
+        });
+    }
+});
+</script> -->

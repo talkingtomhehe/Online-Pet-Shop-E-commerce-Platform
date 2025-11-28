@@ -4,14 +4,43 @@
 
 require_once 'models/Product.php';
 require_once 'models/Category.php';
+require_once 'models/Notification.php'; // added (no path change)
 
 class HomeController {
     private $productModel;
     private $categoryModel;
+    private $notificationModel; // added
     
     public function __construct() {
         $this->productModel = new Product();
         $this->categoryModel = new Category();
+
+        // Try to reuse any existing DB connection or create one if config constants exist.
+        $dbConn = null;
+        if (isset($GLOBALS['db'])) {
+            $dbConn = $GLOBALS['db'];
+        } elseif (class_exists('Database') && method_exists('Database', 'getInstance')) {
+            $dbConn = Database::getInstance();
+        } elseif (defined('DB_HOST') && defined('DB_USER') && defined('DB_PASS') && defined('DB_NAME')) {
+            // create a simple mysqli connection as a last resort (avoid if app already has a DB class)
+            $dbConn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            if ($dbConn->connect_error) {
+                $dbConn = null; // keep null to avoid exceptions
+            }
+        }
+
+        // Instantiate Notification with a DB connection if the constructor expects one
+        try {
+            if ($dbConn !== null) {
+                $this->notificationModel = new Notification($dbConn);
+            } else {
+                // If no DB object available, try to instantiate without argument in case constructor was updated
+                $this->notificationModel = new Notification();
+            }
+        } catch (ArgumentCountError $e) {
+            // Constructor requires an arg and we couldn't provide one — set null and handle gracefully
+            $this->notificationModel = null;
+        }
     }
     
     public function index() {
@@ -26,6 +55,41 @@ class HomeController {
         
         // Page title
         $pageTitle = 'Home';
+        
+        // Notifications: always populate variables for the view (no session check)
+        $unreadCount = 0;
+        $notifications = [];
+
+        // Try model methods if present
+        if (method_exists($this->notificationModel, 'countUnread')) {
+            $unreadCount = (int)$this->notificationModel->countUnread();
+        }
+
+        if (method_exists($this->notificationModel, 'getRecent')) {
+            $notifications = $this->notificationModel->getRecent(10);
+        } elseif (method_exists($this->notificationModel, 'getAll')) {
+            // fallback method name
+            $notifications = $this->notificationModel->getAll();
+        }
+
+        // Convert mysqli_result to array if needed
+        if ($notifications instanceof mysqli_result) {
+            $tmp = [];
+            while ($row = $notifications->fetch_assoc()) {
+                $tmp[] = $row;
+            }
+            $notifications = $tmp;
+        } elseif (is_object($notifications) && method_exists($notifications, 'fetch_assoc')) {
+            // generic cursor-like object handling
+            $tmp = [];
+            while ($row = $notifications->fetch_assoc()) {
+                $tmp[] = $row;
+            }
+            $notifications = $tmp;
+        } elseif (!is_array($notifications)) {
+            // ensure it's always an array
+            $notifications = [];
+        }
         
         // Load view
         include VIEWS_PATH . 'layouts/header.php';
@@ -101,3 +165,4 @@ class HomeController {
         include VIEWS_PATH . 'layouts/footer.php';
     }
 }
+?>

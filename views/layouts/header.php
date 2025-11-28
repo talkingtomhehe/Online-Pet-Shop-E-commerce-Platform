@@ -3,6 +3,13 @@
 // Common header for all pages
 require_once __DIR__ . '/../../includes/SessionManager.php';
 ?>
+<?php
+// Ensure notification variables exist to avoid undefined notices
+$unreadCount = isset($unreadCount) ? intval($unreadCount) : 0;
+if (!isset($notifications) || !is_array($notifications)) {
+    $notifications = [];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,11 +87,10 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                 
                 <!-- Mobile cart button - visible on small screens only -->
                 <?php if(SessionManager::isUserLoggedIn()): ?>
-                <div class="mobile-cart d-lg-none">
+                <div class="mobile-cart d-lg-none d-flex align-items-center"> <!-- added d-flex align-items-center -->
                     <a class="nav-link position-relative" href="<?php echo SITE_URL; ?>cart">
                         <i class="bi bi-cart3 fs-5"></i>
                         <?php 
-                        // Get cart count
                         require_once 'models/Cart.php';
                         $cartModel = new Cart();
                         $cartCount = $cartModel->countItems($_SESSION['user_id']);
@@ -92,6 +98,14 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                             echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' . $cartCount . '</span>';
                         }
                         ?>
+                    </a>
+
+                    <!-- Notification (mobile) -->
+                    <a class="nav-link position-relative ms-2" href="#" id="notification-toggle-mobile">
+                        <i class="bi bi-bell fs-5"></i>
+                        <?php if ($unreadCount > 0): ?>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <?php endif; ?>
@@ -164,21 +178,47 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                 
                 <!-- Desktop cart button - hidden on small screens -->
                 <?php if(SessionManager::isUserLoggedIn()): ?>
-                <div class="nav-item d-none d-lg-block">
-                    <a class="nav-link position-relative" href="<?php echo SITE_URL; ?>cart">
+                <div class="nav-item d-none d-lg-flex d-flex align-items-center position-relative"> 
+                    
+                    <a class="nav-link" href="<?php echo SITE_URL; ?>cart">
                         <i class="bi bi-cart3 fs-5"></i>
                         <?php 
-                        // Get cart count
                         if (!isset($cartModel)) {
                             require_once 'models/Cart.php';
                             $cartModel = new Cart();
                         }
                         $cartCount = $cartModel->countItems($_SESSION['user_id']);
                         if ($cartCount > 0) {
-                            echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' . $cartCount . '</span>';
+                            echo '<span class="badge rounded-pill bg-primary">' . $cartCount . '</span>';
                         }
                         ?>
                     </a>
+
+                    <a class="nav-link" href="#" id="notification-toggle">
+                        <i class="bi bi-bell fs-5"></i>
+                        <?php if ($unreadCount > 0): ?>
+                            <span id="notification-badge" class="badge rounded-pill bg-danger"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <div id="notification-dropdown" class="notification-dropdown">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <button id="mark-all-read" class="link-btn">Mark all read</button>
+                        </div>
+                        <div class="notification-content">
+                            <?php if (empty($notifications)): ?>
+                                <div class="notification-empty">No new notifications</div>
+                            <?php else: ?>
+                                <?php foreach($notifications as $notif): ?>
+                                    <a href="<?php echo isset($notif['link']) ? $notif['link'] : '#'; ?>" class="notification-item" data-id="<?php echo $notif['id']; ?>">
+                                        <?php echo htmlspecialchars($notif['message']); ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                 </div>
                 <?php endif; ?>
                 

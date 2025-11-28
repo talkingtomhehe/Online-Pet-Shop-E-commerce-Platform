@@ -3,9 +3,9 @@
 // Copy this file to database.php and fill with your actual values
 class Database {
     private $host = 'localhost';
-    private $username = 'your_username';
-    private $password = 'your_password';
-    private $dbname = 'chabong_shop';
+    private $username = 'root';
+    private $password = '';
+    private $dbname = 'onlinepetshop';
     private $conn;
 
     public function __construct() {
