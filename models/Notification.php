@@ -3,47 +3,67 @@ class Notification {
     private $conn;
     private $table = 'notifications';
 
-    public function __construct($db) {
-        $this->conn = $db;
+    public function __construct() {
+        // Assuming your Database class returns a MySQLi connection
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
-    public function create($userId, $type, $referenceId, $message) {
-        $sql = "INSERT INTO {$this->table} (user_id, type, reference_id, message, is_read) VALUES (:user_id, :type, :reference_id, :message, 0)";
+    public function create($userId, $message, $link) {
+        // SQL matches your requested format (skipping ID as it is auto-increment)
+        $sql = "INSERT INTO {$this->table} (user_id, message, link, is_read, created_at) VALUES (?, ?, ?, 0, NOW())";
+        
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':user_id' => $userId,
-            ':type' => $type,
-            ':reference_id' => $referenceId,
-            ':message' => $message
-        ]);
+        
+        // "iss" = integer (user_id), string (message), string (link)
+        $stmt->bind_param("iss", $userId, $message, $link);
+        
+        return $stmt->execute();
     }
 
     public function getByUser($userId, $limit = 10) {
-        $sql = "SELECT * FROM {$this->table} WHERE user_id = :user_id ORDER BY created_at DESC LIMIT :limit";
+        $sql = "SELECT * FROM {$this->table} WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC LIMIT ?";
+        
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        
+        // "ii" = integer, integer
+        $stmt->bind_param("ii", $userId, $limit);
+        
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getUnreadCount($userId) {
-        $sql = "SELECT COUNT(*) AS cnt FROM {$this->table} WHERE user_id = :user_id AND is_read = 0";
+        $sql = "SELECT COUNT(*) AS cnt FROM {$this->table} WHERE user_id = ? AND is_read = 0";
+        
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':user_id' => $userId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        
         return (int)($row['cnt'] ?? 0);
     }
 
     public function markAsRead($id, $userId) {
-        $sql = "UPDATE {$this->table} SET is_read = 1 WHERE id = :id AND user_id = :user_id";
+        $sql = "UPDATE {$this->table} SET is_read = 1 WHERE id = ? AND user_id = ?";
+        
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([':id' => $id, ':user_id' => $userId]);
+        $stmt->bind_param("ii", $id, $userId);
+        
+        return $stmt->execute();
     }
 
     public function markAllRead($userId) {
-        $sql = "UPDATE {$this->table} SET is_read = 1 WHERE user_id = :user_id";
+        $sql = "UPDATE {$this->table} SET is_read = 1 WHERE user_id = ?";
+        
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([':user_id' => $userId]);
+        $stmt->bind_param("i", $userId);
+        
+        return $stmt->execute();
     }
 }
+?>

@@ -10,7 +10,7 @@ require_once 'config/env.php';
 
 // Include configuration files
 require_once 'config/config.php';
-require_once 'config/database.example.php';
+require_once 'config/database.php';
 require_once 'includes/functions.php';
 
 // Update user's last activity timestamp if logged in
@@ -86,7 +86,10 @@ switch ($controller) {
 
         if ($action === 'index') {
             $homeController->index();
-        } else {
+        } 
+        elseif ($action === 'mark_read') {  // <--- ADD THIS CHECK
+            $homeController->markAsRead();
+        }else {
             $homeController->index();
         }
         break;

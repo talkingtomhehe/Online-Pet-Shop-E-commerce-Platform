@@ -238,4 +238,11 @@ class SessionManager {
         }
         return false;
     }
+
+    public static function getUserId() {
+        if (self::isUserLoggedIn()) {
+            return $_SESSION['user_id'];
+        }
+        return null; // Return null if not logged in
+    }
 }

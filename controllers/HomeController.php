@@ -14,83 +14,56 @@ class HomeController {
     public function __construct() {
         $this->productModel = new Product();
         $this->categoryModel = new Category();
-
-        // Try to reuse any existing DB connection or create one if config constants exist.
-        $dbConn = null;
-        if (isset($GLOBALS['db'])) {
-            $dbConn = $GLOBALS['db'];
-        } elseif (class_exists('Database') && method_exists('Database', 'getInstance')) {
-            $dbConn = Database::getInstance();
-        } elseif (defined('DB_HOST') && defined('DB_USER') && defined('DB_PASS') && defined('DB_NAME')) {
-            // create a simple mysqli connection as a last resort (avoid if app already has a DB class)
-            $dbConn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-            if ($dbConn->connect_error) {
-                $dbConn = null; // keep null to avoid exceptions
-            }
-        }
-
-        // Instantiate Notification with a DB connection if the constructor expects one
-        try {
-            if ($dbConn !== null) {
-                $this->notificationModel = new Notification($dbConn);
-            } else {
-                // If no DB object available, try to instantiate without argument in case constructor was updated
-                $this->notificationModel = new Notification();
-            }
-        } catch (ArgumentCountError $e) {
-            // Constructor requires an arg and we couldn't provide one — set null and handle gracefully
-            $this->notificationModel = null;
-        }
+        $this->notificationModel =  new Notification(); // modified
+        // 
     }
     
+
     public function index() {
         // Get featured products
         $featuredProducts = $this->productModel->getFeaturedProducts(10);
-        
+
         // Get all categories for the navbar
         $categories = $this->categoryModel->getAllCategories();
 
         // Set controller name for navigation highlighting
-        $controller = 'home'; // Add this line
-        
-        // Page title
+        $controller = 'home';
         $pageTitle = 'Home';
-        
-        // Notifications: always populate variables for the view (no session check)
+
+        // Ensure defaults
         $unreadCount = 0;
         $notifications = [];
+        // Only call methods if $this->notificationModel is an object
+        if (is_object($this->notificationModel)) {
+        // Check if user is logged in (Assuming SessionManager exists)
+        $userId = (method_exists('SessionManager', 'getUserId')) ? SessionManager::getUserId() : null;
+        if ($userId) {
+            // 1. Fix: Use getUnreadCount instead of countUnread/countUnreadByUser
+            if (method_exists($this->notificationModel, 'getUnreadCount')) {
+                $unreadCount = $this->notificationModel->getUnreadCount($userId);
+            }
 
-        // Try model methods if present
-        if (method_exists($this->notificationModel, 'countUnread')) {
-            $unreadCount = (int)$this->notificationModel->countUnread();
+            // 2. Fix: Use getByUser instead of getRecent/getRecentByUser
+            if (method_exists($this->notificationModel, 'getByUser')) {
+                $notifications = $this->notificationModel->getByUser($userId, 10);
+            }
         }
+       
+    }
 
-        if (method_exists($this->notificationModel, 'getRecent')) {
-            $notifications = $this->notificationModel->getRecent(10);
-        } elseif (method_exists($this->notificationModel, 'getAll')) {
-            // fallback method name
-            $notifications = $this->notificationModel->getAll();
-        }
-
-        // Convert mysqli_result to array if needed
+        // Convert result sets to arrays if necessary
         if ($notifications instanceof mysqli_result) {
             $tmp = [];
-            while ($row = $notifications->fetch_assoc()) {
-                $tmp[] = $row;
-            }
+            while ($row = $notifications->fetch_assoc()) { $tmp[] = $row; }
             $notifications = $tmp;
         } elseif (is_object($notifications) && method_exists($notifications, 'fetch_assoc')) {
-            // generic cursor-like object handling
             $tmp = [];
-            while ($row = $notifications->fetch_assoc()) {
-                $tmp[] = $row;
-            }
+            while ($row = $notifications->fetch_assoc()) { $tmp[] = $row; }
             $notifications = $tmp;
         } elseif (!is_array($notifications)) {
-            // ensure it's always an array
             $notifications = [];
         }
-        
+
         // Load view
         include VIEWS_PATH . 'layouts/header.php';
         include VIEWS_PATH . 'home/index.php';
@@ -163,6 +136,41 @@ class HomeController {
         include VIEWS_PATH . 'layouts/header.php';
         include VIEWS_PATH . 'contact.php';
         include VIEWS_PATH . 'layouts/footer.php';
+    }
+    public function markAsRead() {
+        // 1. Clean the output buffer to ensure no HTML accidentally gets sent
+        ob_clean(); 
+        header('Content-Type: application/json');
+
+        // 2. Security Check: Is user logged in?
+        // We check this manually or rely on SessionManager
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['success' => false, 'message' => 'User not logged in']);
+            exit;
+        }
+
+        try {
+            $userId = $_SESSION['user_id'];
+            
+            // 3. Call the Model
+            // (Ensure notificationModel is initialized - reuse logic from constructor)
+            if ($this->notificationModel && method_exists($this->notificationModel, 'markAllRead')) {
+                $result = $this->notificationModel->markAllRead($userId);
+                
+                if ($result) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Database update failed']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Model or method missing']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+        
+        // 4. STOP EVERYTHING so the rest of the page (HTML) doesn't load
+        exit;
     }
 }
 ?>

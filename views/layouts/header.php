@@ -246,3 +246,48 @@ if (!isset($notifications) || !is_array($notifications)) {
     </header>
 
     <main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const markReadBtn = document.getElementById('mark-all-read');
+    
+    if (markReadBtn) {
+        markReadBtn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+
+            const url = SITE_URL + 'index.php?page=home&action=mark_read';
+
+            fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log("✅ Notifications marked as read.");
+                    
+                    // 1. Hide the Badge
+                    const badge = document.getElementById('notification-badge');
+                    if (badge) badge.style.display = 'none';
+
+                    // 2. Hide Mobile Badge
+                    const mobileBadge = document.querySelector('.mobile-cart .badge.bg-danger');
+                    if (mobileBadge) mobileBadge.style.display = 'none';
+                    
+                    // 3. CLEAR THE LIST (Make messages disappear)
+                    const contentDiv = document.querySelector('.notification-content');
+                    if (contentDiv) {
+                        contentDiv.innerHTML = '<div class="notification-empty">No new notifications</div>';
+                    }
+
+                } else {
+                    console.error("❌ Server Error:", data.message);
+                }
+            })
+            .catch(error => console.error('❌ Fetch Error:', error));
+        });
+    }
+});
+</script>

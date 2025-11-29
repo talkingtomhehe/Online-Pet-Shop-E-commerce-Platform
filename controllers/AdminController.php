@@ -761,7 +761,7 @@ class AdminController
                 $db = new Database(); // reuse same as other controllers
                 $notification = new Notification($db->getConnection());
 
-                $message = "Your order #{$id} status has been updated to {$status}.";
+                $message = "order status has been updated.";
                 $notification->create($orderUserId, 'order', $orderId, $message);
 
                 echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);

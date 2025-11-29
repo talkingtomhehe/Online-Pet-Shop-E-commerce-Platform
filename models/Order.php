@@ -133,7 +133,28 @@ class Order
                 VALUES ({$userId}, '{$name}', '{$email}', '{$address}', '{$city}', '{$postalCode}', '{$phone}', {$totalAmount}, 'pending', NOW())";
 
         if ($this->db->query($sql)) {
-            return $this->db->insert_id;
+            // 1. Get the ID of the new order
+            $orderId = $this->db->insert_id;
+
+            // --- START NOTIFICATION LOGIC ---
+            try {
+                require_once __DIR__ . '/Notification.php';
+                $notificationModel = new Notification();
+                
+                $message = "Order has been placed successfully!";
+                
+                // GENERATE THE LINK HERE
+                // Based on your Router: index.php?page=user&action=order-detail&id=...
+                $link = "index.php?page=user&action=order-detail&id=" . $orderId;
+                
+                // Call the new create function: (User ID, Message, Link)
+                $notificationModel->create($userId, $message, $link);
+                
+            } catch (Exception $e) {
+                error_log("Notification Error: " . $e->getMessage());
+            }
+
+            return $orderId;
         }
 
         return false;
@@ -232,7 +253,23 @@ class Order
             $stockSql = "UPDATE products SET stock = stock + {$quantity} WHERE id = {$productId}";
             $this->db->query($stockSql);
         }
-
+        try {
+            // Ensure the model is loaded
+            require_once __DIR__ . '/Notification.php';
+            $notificationModel = new Notification();
+            
+            $message = "Your order #{$orderId} has been successfully cancelled.";
+            
+            // Link to the order details
+            $link = "index.php?page=user&action=order-detail&id=" . $orderId;
+            
+            // Call create(userId, message, link)
+            $notificationModel->create($userId, $message, $link);
+            
+        } catch (Exception $e) {
+            // Log error but don't fail the cancellation process
+            error_log("Notification Error (Cancel Order): " . $e->getMessage());
+        }
         return [
             'success' => true,
             'message' => 'Order has been successfully cancelled and stock has been restored.'
