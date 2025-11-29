@@ -52,6 +52,46 @@
                 <div class="col-12 text-center"><p>No products found</p></div>
             <?php endif; ?>
         </div>
+
+        <?php if (isset($recommendations) && $recommendations && $recommendations->num_rows > 0): ?>
+        <div class="mt-5">
+            <hr class="my-5">
+            <div class="d-flex align-items-center justify-content-center mb-4">
+                <h2 class="mb-0 me-3">Recommended For You</h2>
+                <span class="badge bg-primary rounded-pill">For You</span>
+            </div>
+            
+            <div class="product-container d-flex flex-wrap justify-content-center">
+                <?php while($product = $recommendations->fetch_assoc()): ?>
+                    <div class="product-col">
+                        <a href="<?php echo SITE_URL; ?>products/detail/<?php echo $product['id']; ?>" class="text-decoration-none">
+                            <div class="card product-card h-100 clickable-card border-primary" style="border-width: 1px;">
+                                <div class="position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary shadow-sm">AI Pick</span>
+                                </div>
+                                <img src="<?php echo SITE_URL . htmlspecialchars($product['image_url']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h5>
+                                    <p class="card-text">$<?php echo number_format($product['price'], 2); ?></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php endwhile; ?>
+                
+                <?php
+                // Fill row if needed
+                $count = $recommendations->num_rows % 5;
+                if ($count > 0) {
+                    $needed = 5 - $count;
+                    for ($i = 0; $i < $needed; $i++) {
+                        echo '<div class="product-col"></div>';
+                    }
+                }
+                ?>
+            </div>
+        </div>
+        <?php endif; ?>
         
         <div class="text-center mt-4 mb-5">
             <a href="<?php echo SITE_URL; ?>products" class="btn view-all-btn">View All Products</a>

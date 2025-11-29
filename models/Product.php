@@ -203,4 +203,34 @@ class Product {
         
         return $this->db->query($sql);
     }
+
+    public function getUserRecommendations($userId, $limit = 5) {
+        $userId = (int)$userId;
+
+        // 1. Identify categories the user has bought from
+        // 2. Suggest random products from those categories
+        // 3. Exclude products the user has already bought
+        $sql = "SELECT DISTINCT p.* FROM {$this->table} p
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.category_id IN (
+                    SELECT DISTINCT p2.category_id 
+                    FROM order_items oi
+                    JOIN orders o ON oi.order_id = o.id
+                    JOIN products p2 ON oi.product_id = p2.id
+                    WHERE o.user_id = {$userId}
+                )
+                AND p.id NOT IN (
+                    SELECT DISTINCT oi.product_id
+                    FROM order_items oi
+                    JOIN orders o ON oi.order_id = o.id
+                    WHERE o.user_id = {$userId}
+                )
+                ORDER BY RAND()
+                LIMIT {$limit}";
+
+        $result = $this->db->query($sql);
+
+        // Fallback: If no history or recommendations found, return empty or handle in controller
+        return $result;
+    }
 }

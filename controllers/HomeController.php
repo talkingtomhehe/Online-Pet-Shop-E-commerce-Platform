@@ -21,6 +21,13 @@ class HomeController {
         // Get all categories for the navbar
         $categories = $this->categoryModel->getAllCategories();
 
+        // Get AI Recommendations if user is logged in
+        $recommendations = null;
+        if (SessionManager::isUserLoggedIn()) {
+            $userId = $_SESSION['user_id'];
+            $recommendations = $this->productModel->getUserRecommendations($userId, 5);
+        }
+
         // Set controller name for navigation highlighting
         $controller = 'home'; // Add this line
         
