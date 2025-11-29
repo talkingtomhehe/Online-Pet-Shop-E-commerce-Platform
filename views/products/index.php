@@ -37,7 +37,10 @@
                     </ul>
                     </div>
                 </div>
+                
             </div>
+            
+            
             
             <!-- Products grid -->
             <div class="col-md-9">
@@ -59,8 +62,29 @@
                             </div>
                         </div>
                         <div class="text-muted small">
-                            <?php echo $totalProducts; ?> products found
+                            &nbsp;<?php  echo $totalProducts; ?> products found
                         </div>
+                        <div class="col-auto ms-auto">
+                                    <form method="GET" class="d-flex align-items-center">
+                                        <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort); ?>">
+                                        <input type="hidden" name="order" value="<?php echo htmlspecialchars($order); ?>">
+                                        
+                                        <span class="me-2 small fw-bold">Price:</span>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" name="min_price" placeholder="Min" min="0" step="0.01" style="width: 70px;" 
+                                                   value="<?php echo isset($_GET['min_price']) && $_GET['min_price'] !== '' ? number_format((float)$_GET['min_price'], 2, '.', '') : ''; ?>">
+                                            
+                                            <span class="input-group-text">-</span>
+                                            
+                                            <input type="number" class="form-control" name="max_price" placeholder="Max" min="0" step="0.01" style="width: 70px;"
+                                                   value="<?php echo isset($_GET['max_price']) && $_GET['max_price'] !== '' ? number_format((float)$_GET['max_price'], 2, '.', '') : ''; ?>">
+                                            
+                                            <button class="btn btn-primary" type="submit">Go</button>
+                                        </div>
+                                    </form>
+                                </div>
+                        
                     </div>
                     
                     <!-- Product container with flex wrap -->

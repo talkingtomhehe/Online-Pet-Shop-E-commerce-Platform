@@ -35,7 +35,15 @@ function getSortURL($sortField, $currentSort, $currentOrder) {
     if (!empty($search)) {
         $url .= "&search=" . urlencode($search);
     }
-    
+
+    //price filter
+    if (isset($_GET['min_price']) && $_GET['min_price'] !== '') {
+        $url .= "&min_price=" . urlencode($_GET['min_price']);
+    }
+    if (isset($_GET['max_price']) && $_GET['max_price'] !== '') {
+        $url .= "&max_price=" . urlencode($_GET['max_price']);
+    }
+
     if (isset($page) && $page > 1) {
         $url .= "&page=" . $page;
     }
@@ -85,6 +93,14 @@ function getPaginationURL($pageNum) {
     // Add other parameters
     if (!empty($search)) {
         $url .= "&search=" . urlencode($search);
+    }
+
+    //range filter
+    if (isset($_GET['min_price']) && $_GET['min_price'] !== '') {
+        $url .= "&min_price=" . urlencode($_GET['min_price']);
+    }
+    if (isset($_GET['max_price']) && $_GET['max_price'] !== '') {
+        $url .= "&max_price=" . urlencode($_GET['max_price']);
     }
     
     if (!empty($sort)) {
