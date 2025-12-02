@@ -11,14 +11,39 @@ class Product {
         $this->db = $database->getConnection();
     }
 
-    public function getAllProducts($sort = 'id', $order = 'asc', $limit = null, $offset = null) {
-        // Update SQL to use image_url field
-        $sql = "SELECT * FROM {$this->table}";
+    // public function getAllProducts($sort = 'id', $order = 'asc', $limit = null, $offset = null) {
+    //     // Update SQL to use image_url field
+    //     $sql = "SELECT * FROM {$this->table}";
         
-        // Add sorting
+    //     // Add sorting
+    //     $sql .= " ORDER BY {$sort} {$order}";
+        
+    //     // Add pagination
+    //     if ($limit !== null) {
+    //         $sql .= " LIMIT {$limit}";
+    //         if ($offset !== null) {
+    //             $sql .= " OFFSET {$offset}";
+    //         }
+    //     }
+        
+    //     return $this->db->query($sql);
+    // }
+    public function getAllProducts($sort = 'id', $order = 'asc', $limit = null, $offset = null, $minPrice = null, $maxPrice = null) {
+        $sql = "SELECT * FROM {$this->table} WHERE 1=1";
+        
+        // Add Price Filters
+        if ($minPrice !== null && $minPrice !== '') {
+            $minPrice = (float)$minPrice;
+            $sql .= " AND price >= {$minPrice}";
+        }
+        
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $maxPrice = (float)$maxPrice;
+            $sql .= " AND price <= {$maxPrice}";
+        }
+        
         $sql .= " ORDER BY {$sort} {$order}";
         
-        // Add pagination
         if ($limit !== null) {
             $sql .= " LIMIT {$limit}";
             if ($offset !== null) {
@@ -111,14 +136,39 @@ class Product {
     }
     
     // Get products by category
-    public function getProductsByCategory($categoryId, $sort = 'id', $order = 'desc', $limit = null, $offset = null) {
+    // public function getProductsByCategory($categoryId, $sort = 'id', $order = 'desc', $limit = null, $offset = null) {
+    //     $categoryId = (int)$categoryId;
+    //     $sql = "SELECT * FROM {$this->table} WHERE category_id = {$categoryId}";
+        
+    //     // Add sorting
+    //     $sql .= " ORDER BY {$sort} {$order}";
+        
+    //     // Add pagination
+    //     if ($limit !== null) {
+    //         $sql .= " LIMIT {$limit}";
+    //         if ($offset !== null) {
+    //             $sql .= " OFFSET {$offset}";
+    //         }
+    //     }
+        
+    //     return $this->db->query($sql);
+    // }
+    public function getProductsByCategory($categoryId, $sort = 'id', $order = 'desc', $limit = null, $offset = null, $minPrice = null, $maxPrice = null) {
         $categoryId = (int)$categoryId;
         $sql = "SELECT * FROM {$this->table} WHERE category_id = {$categoryId}";
         
-        // Add sorting
+        if ($minPrice !== null && $minPrice !== '') {
+            $minPrice = (float)$minPrice;
+            $sql .= " AND price >= {$minPrice}";
+        }
+        
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $maxPrice = (float)$maxPrice;
+            $sql .= " AND price <= {$maxPrice}";
+        }
+        
         $sql .= " ORDER BY {$sort} {$order}";
         
-        // Add pagination
         if ($limit !== null) {
             $sql .= " LIMIT {$limit}";
             if ($offset !== null) {
@@ -130,9 +180,32 @@ class Product {
     }
 
     // Add this method if it doesn't exist
-    public function countProductsByCategory($categoryId) {
+    // public function countProductsByCategory($categoryId) {
+    //     $categoryId = (int)$categoryId;
+    //     $sql = "SELECT COUNT(*) as total FROM {$this->table} WHERE category_id = {$categoryId}";
+    //     $result = $this->db->query($sql);
+        
+    //     if ($result && $result->num_rows > 0) {
+    //         return $result->fetch_assoc()['total'];
+    //     }
+        
+    //     return 0;
+    // }
+
+    public function countProductsByCategory($categoryId, $minPrice = null, $maxPrice = null) {
         $categoryId = (int)$categoryId;
         $sql = "SELECT COUNT(*) as total FROM {$this->table} WHERE category_id = {$categoryId}";
+        
+        if ($minPrice !== null && $minPrice !== '') {
+            $minPrice = (float)$minPrice;
+            $sql .= " AND price >= {$minPrice}";
+        }
+        
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $maxPrice = (float)$maxPrice;
+            $sql .= " AND price <= {$maxPrice}";
+        }
+        
         $result = $this->db->query($sql);
         
         if ($result && $result->num_rows > 0) {
@@ -169,14 +242,47 @@ class Product {
         return 0;
     }
 
-    public function searchProducts($search, $sort = 'id', $order = 'desc', $limit = null, $offset = null) {
+    // public function searchProducts($search, $sort = 'id', $order = 'desc', $limit = null, $offset = null) {
+    //     $search = $this->db->real_escape_string($search);
+        
+    //     $sql = "SELECT p.* FROM {$this->table} p
+    //             LEFT JOIN categories c ON p.category_id = c.id
+    //             WHERE p.name LIKE '{$search}%' 
+    //             OR c.name LIKE '%{$search}%'
+    //             ORDER BY p.{$sort} {$order}";
+        
+    //     if ($limit !== null) {
+    //         $sql .= " LIMIT {$limit}";
+            
+    //         if ($offset !== null) {
+    //             $sql .= " OFFSET {$offset}";
+    //         }
+    //     }
+        
+    //     return $this->db->query($sql);
+    // }
+    //update for search by price
+    public function searchProducts($search, $sort = 'id', $order = 'desc', $limit = null, $offset = null, $minPrice = null, $maxPrice = null) {
         $search = $this->db->real_escape_string($search);
         
+        // Use parentheses for OR conditions to avoid logic errors when combining with AND
         $sql = "SELECT p.* FROM {$this->table} p
                 LEFT JOIN categories c ON p.category_id = c.id
-                WHERE p.name LIKE '{$search}%' 
-                OR c.name LIKE '%{$search}%'
-                ORDER BY p.{$sort} {$order}";
+                WHERE (p.name LIKE '%{$search}%' 
+                OR c.name LIKE '%{$search}%')";
+        
+        // Add Price Filters
+        if ($minPrice !== null && $minPrice !== '') {
+            $minPrice = (float)$minPrice;
+            $sql .= " AND p.price >= {$minPrice}";
+        }
+        
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $maxPrice = (float)$maxPrice;
+            $sql .= " AND p.price <= {$maxPrice}";
+        }
+        
+        $sql .= " ORDER BY p.{$sort} {$order}";
         
         if ($limit !== null) {
             $sql .= " LIMIT {$limit}";
@@ -187,6 +293,33 @@ class Product {
         }
         
         return $this->db->query($sql);
+    }
+
+    public function countSearchProducts($search, $minPrice = null, $maxPrice = null) {
+        $search = $this->db->real_escape_string($search);
+        
+        $sql = "SELECT COUNT(*) as total FROM {$this->table} p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE (p.name LIKE '%{$search}%' 
+                OR c.name LIKE '%{$search}%')";
+        
+        if ($minPrice !== null && $minPrice !== '') {
+            $minPrice = (float)$minPrice;
+            $sql .= " AND p.price >= {$minPrice}";
+        }
+        
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $maxPrice = (float)$maxPrice;
+            $sql .= " AND p.price <= {$maxPrice}";
+        }
+        
+        $result = $this->db->query($sql);
+        
+        if ($result && $result->num_rows > 0) {
+            return $result->fetch_assoc()['total'];
+        }
+        
+        return 0;
     }
 
     // Update product stock
