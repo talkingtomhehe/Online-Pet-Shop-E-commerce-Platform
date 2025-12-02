@@ -3,8 +3,8 @@
 // Copy this file to database.php and fill with your actual values
 class Database {
     private $host = 'localhost';
-    private $username = 'admin';
-    private $password = '';
+    private $username = 'your_username';
+    private $password = 'your_password';
     private $dbname = 'chabong_shop';
     private $conn;
 
