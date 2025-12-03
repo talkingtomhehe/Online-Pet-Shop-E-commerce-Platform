@@ -11,22 +11,30 @@ Woof-woof PetShop is a comprehensive e-commerce platform designed specifically f
 - User registration and authentication system with real-time validation
 - Google login integration for simplified account creation
 - Comprehensive product catalog with categories and search functionality
+- Advanced product search with AJAX functionality
 - Responsive design for optimal viewing on all devices
 - Shopping cart functionality with session management
 - Secure checkout process
 - Order tracking and history for registered users
+- Order cancellation functionality
 - User profile management with customizable avatars
+- Spa/grooming appointment booking system
+- Real-time notifications
 - Password strength validation and security measures
+- Session timeout management (2-hour inactivity limit)
+- AI products recommendation
 
 ### Administrative Features
 
-- Secure admin dashboard with analytics
+- Secure admin dashboard with analytics and sales statistics
 - Product management (add, edit, delete products)
-- Category management
-- Order management with status updates
+- Category management (add, edit, delete categories)
+- Order management with status updates and detailed order views
+- Appointment management with status updates
 - User account management
 - Store location management
 - Real-time monitoring of online users
+- Remember me functionality for admin login
 
 ## Technical Implementation
 
@@ -54,8 +62,8 @@ The application implements several modern web development techniques:
 
 1. Clone the repository to your local machine
 2. Import the database schema:
-   - Create a new MySQL database named `chabong_shop`
-   - Import the SQL file `chabong_shop.sql`
+   - Create a new MySQL database named `onlinepetshop`
+   - Import the SQL file `onlinepetshop.sql`
 3. Configure database connection:
    - Open `database.php`
    - Update the database credentials to match your environment
@@ -88,13 +96,16 @@ The admin dashboard provides access to:
 - Sales analytics and statistics
 - Product inventory management
 - Order processing and fulfillment
+- Appointment management
 - User account management
 - Category management
 - Store location settings
 
 ### Customer/User Access
 
-- URL: http://localhost/onlinepetshop/user/login
+- Login URL: http://localhost/onlinepetshop/user/login
+- Signup URL: http://localhost/onlinepetshop/user/signup
+- Booking URL: http://localhost/onlinepetshop/booking
 
 Demo User Accounts:
 
@@ -105,14 +116,15 @@ Demo User Accounts:
    - This account has completed orders and profile information
 
 2. Google-linked User:
-   - Use your Google account to login
+   - Use your Google account to login via Google OAuth
 
 ### Testing Registration
 
-You can also test the user registration system by creating a new account:
+You can test the user registration system by creating a new account:
 
 - Navigate to http://localhost/onlinepetshop/user/signup
-- The registration form includes real-time validation for username and email availability
+- The registration form includes real-time AJAX validation for username and email availability
+- Password strength validation is enforced
 
 ## Dependencies and Setup
 
@@ -147,7 +159,7 @@ The vendor directory contains essential libraries and should be properly initial
 
 ## Environment Configuration
 
-This project uses environment variables for configuration. To set up:
+This project supports environment variables for sensitive configuration. To set up:
 
 1. Copy `.env.example` to `.env` and fill in your credentials
 2. Copy `config/database.example.php` to `config/database.php` (if not using environment variables)
