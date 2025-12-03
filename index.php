@@ -44,8 +44,8 @@ $request = str_replace($basePath, '', $request);
 $requestParts = explode('?', $request);
 $path = $requestParts[0];
 
-// Check if using query string routing (index.php?page=controller&action=action)
-if (isset($_GET['page'])) {
+// Only use query string routing if 'page' parameter is not numeric (to avoid conflict with pagination)
+if (isset($_GET['page']) && !is_numeric($_GET['page'])) {
     $controller = $_GET['page'];
     $action = isset($_GET['action']) ? $_GET['action'] : 'index';
     $id = isset($_GET['id']) ? $_GET['id'] : null;
