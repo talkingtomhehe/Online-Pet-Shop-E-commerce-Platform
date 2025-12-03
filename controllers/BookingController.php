@@ -163,7 +163,7 @@ class BookingController {
             $notification = new Notification(); 
 
             // 1. Define the specific message
-            $message = "Pet Spa booking successfully.";
+            $message = "Your Pet Spa booking #{$appointmentId} has been placed successfully.";
 
             // 2. Define the exact link you asked for
             // (Using relative path is safer, but matches your request structure)

@@ -3,7 +3,7 @@ require_once 'models/Admin.php';
 require_once 'models/Category.php';
 require_once 'models/Product.php';
 require_once 'models/User.php';
-use \models\Notification; // if namespace used; otherwise require_once models/Notification.php
+require_once 'models/User.php';
 
 class AdminController
 {
@@ -752,17 +752,36 @@ class AdminController
             require_once 'models/Order.php';
             $orderModel = new Order();
 
-            // Update order status
+            // 1. FETCH ORDER DETAILS FIRST (To get the User ID)
+            $order = $orderModel->getOrderById($id);
+            
+            if (!$order) {
+                echo json_encode(['success' => false, 'message' => 'Order not found']);
+                exit;
+            }
+
+            $userId = $order['user_id']; // This is the user we need to notify!
+
+            // 2. Update order status
             $result = $orderModel->updateStatus($id, $status);
 
             if ($result) {
-                // Load Notification model and create notification for user
+                // 3. Create Notification
                 require_once 'models/Notification.php';
-                $db = new Database(); // reuse same as other controllers
-                $notification = new Notification($db->getConnection());
+                $db = new Database(); 
+                $notificationModel = new Notification($db->getConnection());
 
-                $message = "order status has been updated.";
-                $notification->create($orderUserId, 'order', $orderId, $message);
+                // Create a clear message
+                $message = "Your Order #{$id} status has been updated.";
+                
+                // Create a link to the user's order view
+                $link = SITE_URL . "user/order-detail/{$id}";
+
+                // Call create (assuming your Model uses: userId, message, link)
+                // If your create function is different, adjust parameters below
+                if (method_exists($notificationModel, 'create')) {
+                    $notificationModel->create($userId, $message, $link);
+                }
 
                 echo json_encode(['success' => true, 'message' => 'Order status updated successfully']);
             } else {
@@ -916,7 +935,6 @@ class AdminController
 
         // Get all appointments (we'll handle pagination in the view if needed)
         $appointments = $appointmentModel->getAllAppointments($filters);
-
         // Count appointments for statistics
         $allAppointments = $appointmentModel->getAllAppointments([]);
         $totalAppointments = count($allAppointments);
@@ -941,68 +959,65 @@ class AdminController
         // Check if admin is logged in
         $this->checkAdminAuth();
 
-        // Check for request
+        // Check for AJAX POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
             $id = (int)$_POST['id'];
-            $status = $_POST['status'];
+            $status = htmlspecialchars(strip_tags($_POST['status']));
 
             // Validate status
             $validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
             if (!in_array($status, $validStatuses)) {
-                // Handle AJAX vs regular form submission
-                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'message' => 'Invalid status']);
-                } else {
-                    $_SESSION['admin_message'] = [
-                        'type' => 'error',
-                        'text' => 'Invalid status'
-                    ];
-                    header('Location: ' . SITE_URL . 'admin/appointments');
-                }
+                echo json_encode(['success' => false, 'message' => 'Invalid status selected']);
                 exit;
             }
 
-            require_once 'models/Appointment.php';
+            // Init DB and Model
             require_once 'config/database.php';
+            require_once 'models/Appointment.php';
+            
             $database = new Database();
             $db = $database->getConnection();
             $appointmentModel = new Appointment($db);
 
-            // Update appointment status
+            // 1. FETCH APPOINTMENT DETAILS (We need the User ID to notify them)
+            // Note: If your model uses 'getById' instead of 'getAppointmentById', change the method name below.
+            $appointment = null;
+            if (method_exists($appointmentModel, 'getAppointmentById')) {
+                $appointment = $appointmentModel->getAppointmentById($id);
+            } elseif (method_exists($appointmentModel, 'getById')) {
+                $appointment = $appointmentModel->getById($id);
+            }
+
+            // 2. UPDATE STATUS
             $result = $appointmentModel->updateStatus($id, $status);
 
             if ($result) {
-                $statusText = ucfirst($status);
-                // Handle AJAX vs regular form submission
-                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => "Appointment {$statusText} successfully"]);
-                } else {
-                    $_SESSION['admin_message'] = [
-                        'type' => 'success',
-                        'text' => "Appointment {$statusText} successfully"
-                    ];
-                    header('Location: ' . SITE_URL . 'admin/appointments');
+                // 3. SEND NOTIFICATION (Wrapped in try-catch to prevent crashes)
+                if ($appointment && isset($appointment['user_id'])) {
+                    try {
+                        require_once 'models/Notification.php';
+                        $notifModel = new Notification($db);
+                        
+                        $message = "Your Spa Appointment #{$id} is now " . ucfirst($status);
+                        // Link takes them to their appointment list
+                        $link = SITE_URL . "index.php?page=user-appointments"; 
+                        
+                        $notifModel->create($appointment['user_id'], $message, $link);
+                    } catch (Exception $e) {
+                        error_log("Appointment Notification Error: " . $e->getMessage());
+                    }
                 }
+
+                echo json_encode(['success' => true, 'message' => 'Appointment status updated successfully']);
             } else {
-                // Handle AJAX vs regular form submission
-                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'message' => 'Failed to update appointment status']);
-                } else {
-                    $_SESSION['admin_message'] = [
-                        'type' => 'error',
-                        'text' => 'Failed to update appointment status'
-                    ];
-                    header('Location: ' . SITE_URL . 'admin/appointments');
-                }
+                echo json_encode(['success' => false, 'message' => 'Failed to update appointment status in database']);
             }
             exit;
         }
 
-        // Redirect to appointments page
+        // Redirect if accessed directly
         header('Location: ' . SITE_URL . 'admin/appointments');
         exit;
     }
+
 }

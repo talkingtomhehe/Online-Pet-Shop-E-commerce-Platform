@@ -258,7 +258,7 @@ class Order
             require_once __DIR__ . '/Notification.php';
             $notificationModel = new Notification();
             
-            $message = "Your order #{$orderId} has been successfully cancelled.";
+            $message = "Your order #{$orderId} has been cancelled.";
             
             // Link to the order details
             $link = "index.php?page=user&action=order-detail&id=" . $orderId;

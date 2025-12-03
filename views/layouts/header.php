@@ -2,12 +2,73 @@
 // filepath: c:\xampp\htdocs\petshop\views\layouts\header.php
 // Common header for all pages
 require_once __DIR__ . '/../../includes/SessionManager.php';
-?>
-<?php
-// Ensure notification variables exist to avoid undefined notices
+
+// --- ADD THIS LINE HERE ---
+// Ensure the Notification model is loaded on EVERY page (Products, Cart, etc.)
+require_once __DIR__ . '/../../models/Notification.php'; 
+
 $unreadCount = isset($unreadCount) ? intval($unreadCount) : 0;
 if (!isset($notifications) || !is_array($notifications)) {
     $notifications = [];
+    $notifModel = null;
+
+    if (class_exists('Notification')) {
+        try {
+            // Try no-arg constructor first
+            $notifModel = new Notification();
+        } catch (\ArgumentCountError $e) {
+            // If constructor requires a DB connection, attempt to provide one
+            try {
+                if (class_exists('Database')) {
+                    $db = new Database();
+                    $conn = $db->getConnection(); // can be mysqli or PDO
+                    if ($conn instanceof PDO) {
+                        $notifModel = new Notification($conn);
+                    } elseif ($conn instanceof mysqli) {
+                        // create a PDO fallback using DB_* constants
+                        if (defined('DB_HOST') && defined('DB_USER') && defined('DB_PASS') && defined('DB_NAME')) {
+                            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+                            $pdo = new PDO($dsn, DB_USER, DB_PASS, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+                            $notifModel = new Notification($pdo);
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                $notifModel = null;
+            }
+        } catch (\Throwable $e) {
+            $notifModel = null;
+        }
+    }
+
+    if (is_object($notifModel)) {
+        try {
+            $userId = null;
+            if (method_exists('SessionManager', 'getUserId')) {
+                $userId = SessionManager::getUserId();
+            }
+
+            if (!empty($userId) && method_exists($notifModel, 'getByUser')) {
+                if (method_exists($notifModel, 'getUnreadCount')) {
+                    $unreadCount = (int)$notifModel->getUnreadCount($userId);
+                } else {
+                    $unreadCount = 0;
+                }
+                $notifications = $notifModel->getByUser($userId, 10);
+            } elseif (method_exists($notifModel, 'getLatest')) {
+                // Show latest global notifications when not logged in
+                $notifications = $notifModel->getLatest(10);
+                $unreadCount = 0;
+            }
+        } catch (\Throwable $e) {
+            // ignore and keep defaults
+        }
+    }
+
+    // Ensure $notifications is an array
+    if (!is_array($notifications)) {
+        $notifications = [];
+    }
 }
 ?>
 <!DOCTYPE html>
