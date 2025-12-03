@@ -959,7 +959,7 @@ class AdminController
         // Check if admin is logged in
         $this->checkAdminAuth();
 
-        // Check for AJAX POST request
+        // Check for POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
             $id = (int)$_POST['id'];
             $status = htmlspecialchars(strip_tags($_POST['status']));
@@ -967,11 +967,15 @@ class AdminController
             // Validate status
             $validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
             if (!in_array($status, $validStatuses)) {
-                echo json_encode(['success' => false, 'message' => 'Invalid status selected']);
+                $_SESSION['admin_message'] = [
+                    'type' => 'danger',
+                    'text' => 'Invalid status selected'
+                ];
+                header('Location: ' . SITE_URL . 'admin/appointments');
                 exit;
             }
 
-            // Init DB and Model
+            // Init DB
             require_once 'config/database.php';
             require_once 'models/Appointment.php';
             
@@ -979,8 +983,7 @@ class AdminController
             $db = $database->getConnection();
             $appointmentModel = new Appointment($db);
 
-            // 1. FETCH APPOINTMENT DETAILS (We need the User ID to notify them)
-            // Note: If your model uses 'getById' instead of 'getAppointmentById', change the method name below.
+            // 1. FETCH APPOINTMENT DETAILS (For Notification)
             $appointment = null;
             if (method_exists($appointmentModel, 'getAppointmentById')) {
                 $appointment = $appointmentModel->getAppointmentById($id);
@@ -992,26 +995,40 @@ class AdminController
             $result = $appointmentModel->updateStatus($id, $status);
 
             if ($result) {
-                // 3. SEND NOTIFICATION (Wrapped in try-catch to prevent crashes)
+                // 3. SEND NOTIFICATION
                 if ($appointment && isset($appointment['user_id'])) {
                     try {
                         require_once 'models/Notification.php';
+                        // Reuse the existing $db connection
                         $notifModel = new Notification($db);
                         
                         $message = "Your Spa Appointment #{$id} is now " . ucfirst($status);
-                        // Link takes them to their appointment list
                         $link = SITE_URL . "index.php?page=user-appointments"; 
                         
-                        $notifModel->create($appointment['user_id'], $message, $link);
+                        if (method_exists($notifModel, 'create')) {
+                            $notifModel->create($appointment['user_id'], $message, $link);
+                        }
                     } catch (Exception $e) {
                         error_log("Appointment Notification Error: " . $e->getMessage());
                     }
                 }
 
-                echo json_encode(['success' => true, 'message' => 'Appointment status updated successfully']);
+                // SUCCESS: Set Session Message
+                $_SESSION['admin_message'] = [
+                    'type' => 'success', // This triggers the green alert
+                    'text' => 'Appointment status updated successfully'
+                ];
             } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to update appointment status in database']);
+                // FAILURE: Set Session Message
+                $_SESSION['admin_message'] = [
+                    'type' => 'danger', // This triggers the red alert
+                    'text' => 'Failed to update appointment status in database'
+                ];
             }
+            
+            // REDIRECT back to the appointments page
+            // This reload causes the alert.js to fire on the new page load
+            header('Location: ' . SITE_URL . 'admin/appointments');
             exit;
         }
 
