@@ -87,7 +87,10 @@ switch ($controller) {
 
         if ($action === 'index') {
             $homeController->index();
-        } else {
+        } 
+        elseif ($action === 'mark_read') {  // <--- ADD THIS CHECK
+            $homeController->markAsRead();
+        }else {
             $homeController->index();
         }
         break;

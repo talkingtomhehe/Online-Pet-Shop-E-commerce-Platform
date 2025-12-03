@@ -2,6 +2,74 @@
 // filepath: c:\xampp\htdocs\petshop\views\layouts\header.php
 // Common header for all pages
 require_once __DIR__ . '/../../includes/SessionManager.php';
+
+// --- ADD THIS LINE HERE ---
+// Ensure the Notification model is loaded on EVERY page (Products, Cart, etc.)
+require_once __DIR__ . '/../../models/Notification.php'; 
+
+$unreadCount = isset($unreadCount) ? intval($unreadCount) : 0;
+if (!isset($notifications) || !is_array($notifications)) {
+    $notifications = [];
+    $notifModel = null;
+
+    // if (class_exists('Notification')) {
+    //     try {
+    //         // Try no-arg constructor first
+    //         $notifModel = new Notification();
+    //     } catch (\ArgumentCountError $e) {
+    //         // If constructor requires a DB connection, attempt to provide one
+    //         try {
+    //             if (class_exists('Database')) {
+    //                 $db = new Database();
+    //                 $conn = $db->getConnection(); // can be mysqli or PDO
+    //                 if ($conn instanceof PDO) {
+    //                     $notifModel = new Notification($conn);
+    //                 } elseif ($conn instanceof mysqli) {
+    //                     // create a PDO fallback using DB_* constants
+    //                     if (defined('DB_HOST') && defined('DB_USER') && defined('DB_PASS') && defined('DB_NAME')) {
+    //                         $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+    //                         $pdo = new PDO($dsn, DB_USER, DB_PASS, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    //                         $notifModel = new Notification($pdo);
+    //                     }
+    //                 }
+    //             }
+    //         } catch (\Throwable $e) {
+    //             $notifModel = null;
+    //         }
+    //     } catch (\Throwable $e) {
+    //         $notifModel = null;
+    //     }
+    //}
+
+    if (is_object($notifModel)) {
+        try {
+            $userId = null;
+            if (method_exists('SessionManager', 'getUserId')) {
+                $userId = SessionManager::getUserId();
+            }
+
+            if (!empty($userId) && method_exists($notifModel, 'getByUser')) {
+                if (method_exists($notifModel, 'getUnreadCount')) {
+                    $unreadCount = (int)$notifModel->getUnreadCount($userId);
+                } else {
+                    $unreadCount = 0;
+                }
+                $notifications = $notifModel->getByUser($userId, 10);
+            // } elseif (method_exists($notifModel, 'getLatest')) {
+            //     // Show latest global notifications when not logged in
+            //     $notifications = $notifModel->getLatest(10);
+            //     $unreadCount = 0;
+            }
+        } catch (\Throwable $e) {
+            // ignore and keep defaults
+        }
+    }
+
+    // Ensure $notifications is an array
+    if (!is_array($notifications)) {
+        $notifications = [];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,11 +148,10 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                 
                 <!-- Mobile cart button - visible on small screens only -->
                 <?php if(SessionManager::isUserLoggedIn()): ?>
-                <div class="mobile-cart d-lg-none">
+                <div class="mobile-cart d-lg-none d-flex align-items-center"> <!-- added d-flex align-items-center -->
                     <a class="nav-link position-relative" href="<?php echo SITE_URL; ?>cart">
                         <i class="bi bi-cart3 fs-5"></i>
                         <?php 
-                        // Get cart count
                         require_once 'models/Cart.php';
                         $cartModel = new Cart();
                         $cartCount = $cartModel->countItems($_SESSION['user_id']);
@@ -92,6 +159,14 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                             echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' . $cartCount . '</span>';
                         }
                         ?>
+                    </a>
+
+                    <!-- Notification (mobile) -->
+                    <a class="nav-link position-relative ms-2" href="#" id="notification-toggle-mobile">
+                        <i class="bi bi-bell fs-5"></i>
+                        <?php if ($unreadCount > 0): ?>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <?php endif; ?>
@@ -164,21 +239,47 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
                 
                 <!-- Desktop cart button - hidden on small screens -->
                 <?php if(SessionManager::isUserLoggedIn()): ?>
-                <div class="nav-item d-none d-lg-block">
-                    <a class="nav-link position-relative" href="<?php echo SITE_URL; ?>cart">
+                <div class="nav-item d-none d-lg-flex d-flex align-items-center position-relative"> 
+                    
+                    <a class="nav-link" href="<?php echo SITE_URL; ?>cart">
                         <i class="bi bi-cart3 fs-5"></i>
                         <?php 
-                        // Get cart count
                         if (!isset($cartModel)) {
                             require_once 'models/Cart.php';
                             $cartModel = new Cart();
                         }
                         $cartCount = $cartModel->countItems($_SESSION['user_id']);
                         if ($cartCount > 0) {
-                            echo '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' . $cartCount . '</span>';
+                            echo '<span class="badge rounded-pill bg-primary">' . $cartCount . '</span>';
                         }
                         ?>
                     </a>
+
+                    <a class="nav-link" href="#" id="notification-toggle">
+                        <i class="bi bi-bell fs-5"></i>
+                        <?php if ($unreadCount > 0): ?>
+                            <span id="notification-badge" class="badge rounded-pill bg-danger"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <div id="notification-dropdown" class="notification-dropdown">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <button id="mark-all-read" class="link-btn">Mark all read</button>
+                        </div>
+                        <div class="notification-content">
+                            <?php if (empty($notifications)): ?>
+                                <div class="notification-empty">No new notifications</div>
+                            <?php else: ?>
+                                <?php foreach($notifications as $notif): ?>
+                                    <a href="<?php echo isset($notif['link']) ? $notif['link'] : '#'; ?>" class="notification-item" data-id="<?php echo $notif['id']; ?>">
+                                        <?php echo htmlspecialchars($notif['message']); ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                 </div>
                 <?php endif; ?>
                 
@@ -206,3 +307,48 @@ require_once __DIR__ . '/../../includes/SessionManager.php';
     </header>
 
     <main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const markReadBtn = document.getElementById('mark-all-read');
+    
+    if (markReadBtn) {
+        markReadBtn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+
+            const url = SITE_URL + 'index.php?page=home&action=mark_read';
+
+            fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log("✅ Notifications marked as read.");
+                    
+                    // 1. Hide the Badge
+                    const badge = document.getElementById('notification-badge');
+                    if (badge) badge.style.display = 'none';
+
+                    // 2. Hide Mobile Badge
+                    const mobileBadge = document.querySelector('.mobile-cart .badge.bg-danger');
+                    if (mobileBadge) mobileBadge.style.display = 'none';
+                    
+                    // 3. CLEAR THE LIST (Make messages disappear)
+                    const contentDiv = document.querySelector('.notification-content');
+                    if (contentDiv) {
+                        contentDiv.innerHTML = '<div class="notification-empty">No new notifications</div>';
+                    }
+
+                } else {
+                    console.error("❌ Server Error:", data.message);
+                }
+            })
+            .catch(error => console.error('❌ Fetch Error:', error));
+        });
+    }
+});
+</script>

@@ -4,20 +4,25 @@
 
 require_once 'models/Product.php';
 require_once 'models/Category.php';
+require_once 'models/Notification.php'; // added (no path change)
 
 class HomeController {
     private $productModel;
     private $categoryModel;
+    private $notificationModel; // added
     
     public function __construct() {
         $this->productModel = new Product();
         $this->categoryModel = new Category();
+        $this->notificationModel =  new Notification(); // modified
+        // 
     }
     
+
     public function index() {
         // Get featured products
         $featuredProducts = $this->productModel->getFeaturedProducts(10);
-        
+
         // Get all categories for the navbar
         $categories = $this->categoryModel->getAllCategories();
 
@@ -29,11 +34,43 @@ class HomeController {
         }
 
         // Set controller name for navigation highlighting
-        $controller = 'home'; // Add this line
-        
-        // Page title
+        $controller = 'home';
         $pageTitle = 'Home';
-        
+
+        // Ensure defaults
+        $unreadCount = 0;
+        $notifications = [];
+        // Only call methods if $this->notificationModel is an object
+        if (is_object($this->notificationModel)) {
+        // Check if user is logged in (Assuming SessionManager exists)
+        $userId = (method_exists('SessionManager', 'getUserId')) ? SessionManager::getUserId() : null;
+        if ($userId) {
+            // 1. Fix: Use getUnreadCount instead of countUnread/countUnreadByUser
+            if (method_exists($this->notificationModel, 'getUnreadCount')) {
+                $unreadCount = $this->notificationModel->getUnreadCount($userId);
+            }
+
+            // 2. Fix: Use getByUser instead of getRecent/getRecentByUser
+            if (method_exists($this->notificationModel, 'getByUser')) {
+                $notifications = $this->notificationModel->getByUser($userId, 10);
+            }
+        }
+       
+    }
+
+        // Convert result sets to arrays if necessary
+        if ($notifications instanceof mysqli_result) {
+            $tmp = [];
+            while ($row = $notifications->fetch_assoc()) { $tmp[] = $row; }
+            $notifications = $tmp;
+        } elseif (is_object($notifications) && method_exists($notifications, 'fetch_assoc')) {
+            $tmp = [];
+            while ($row = $notifications->fetch_assoc()) { $tmp[] = $row; }
+            $notifications = $tmp;
+        } elseif (!is_array($notifications)) {
+            $notifications = [];
+        }
+
         // Load view
         include VIEWS_PATH . 'layouts/header.php';
         include VIEWS_PATH . 'home/index.php';
@@ -107,4 +144,40 @@ class HomeController {
         include VIEWS_PATH . 'contact.php';
         include VIEWS_PATH . 'layouts/footer.php';
     }
+    public function markAsRead() {
+        // 1. Clean the output buffer to ensure no HTML accidentally gets sent
+        ob_clean(); 
+        header('Content-Type: application/json');
+
+        // 2. Security Check: Is user logged in?
+        // We check this manually or rely on SessionManager
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['success' => false, 'message' => 'User not logged in']);
+            exit;
+        }
+
+        try {
+            $userId = $_SESSION['user_id'];
+            
+            // 3. Call the Model
+            // (Ensure notificationModel is initialized - reuse logic from constructor)
+            if ($this->notificationModel && method_exists($this->notificationModel, 'markAllRead')) {
+                $result = $this->notificationModel->markAllRead($userId);
+                
+                if ($result) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Database update failed']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Model or method missing']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+        
+        // 4. STOP EVERYTHING so the rest of the page (HTML) doesn't load
+        exit;
+    }
 }
+?>

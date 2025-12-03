@@ -161,7 +161,7 @@ class Appointment {
     public function getById($id) {
         $query = "SELECT 
                     a.*,
-                    u.name as customer_name,
+                    u.full_name as customer_name,
                     u.email as customer_email,
                     u.phone as customer_phone,
                     s.name as service_name,

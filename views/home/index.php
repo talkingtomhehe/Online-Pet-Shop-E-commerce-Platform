@@ -98,3 +98,8 @@
         </div>
     </div>
 </section>
+
+<div class="top-bar">
+    <!-- ...existing nav / header ... -->
+</div>
+

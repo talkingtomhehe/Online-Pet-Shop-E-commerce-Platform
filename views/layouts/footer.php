@@ -144,5 +144,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('notification-toggle');
+    var dropdown = document.getElementById('notification-dropdown');
+    var markAllBtn = document.getElementById('mark-all-read');
+    if (toggle && dropdown) {
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function() {
+            if (dropdown) dropdown.style.display = 'none';
+        });
+    }
+
+    // Attach handlers for individual items and mark all
+    document.querySelectorAll('.notification-item').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            var id = el.getAttribute('data-id');
+            var href = el.getAttribute('href') || '#';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '<?php echo SITE_URL; ?>ajax/mark-notification-read', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() { if (xhr.readyState === 4) window.location.href = href; };
+            xhr.send('id=' + encodeURIComponent(id));
+        });
+    });
+
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '<?php echo SITE_URL; ?>ajax/mark-notification-read', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    var badge = document.getElementById('notification-badge');
+                    if (badge) badge.style.display = 'none';
+                    document.querySelectorAll('.notification-item').forEach(function(it){ it.style.opacity = 0.6; });
+                }
+            };
+            xhr.send('id=0'); // mark all
+        });
+    }
+});
+</script>
 </body>
 </html>

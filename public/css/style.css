@@ -8,7 +8,7 @@
 /* ==================================================
    1. Base Styles & Reset
    ================================================== */
-   * {
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -20,7 +20,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    color: #333333; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #333333;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
 }
 
 /* Make all images responsive by default */
@@ -44,14 +45,16 @@ header {
 main {
     flex: 1;
     background-color: #FFFFFF;
-    padding-top: 88px; /* Combined height of navbar and utility bar */
+    padding-top: 88px;
+    /* Combined height of navbar and utility bar */
     margin-top: 0;
 }
 
 /* Footer Styles */
 footer {
     background-color: #f5f0e9;
-    color: #555555; /* IMPROVED: Changed from #9d6340 to darker gray for better contrast */
+    color: #555555;
+    /* IMPROVED: Changed from #9d6340 to darker gray for better contrast */
     text-align: center;
     padding: 10px;
     width: 100%;
@@ -74,7 +77,8 @@ footer {
 .utility-btn {
     background: transparent;
     border: none;
-    color: #b77c52; /* IMPROVED: Changed from #d4a476 for better contrast */
+    color: #b77c52;
+    /* IMPROVED: Changed from #d4a476 for better contrast */
     font-size: 12px;
     padding: 2px 8px;
     transition: color 0.2s ease;
@@ -88,9 +92,10 @@ footer {
     right: -8px;
     top: 50%;
     transform: translateY(-50%);
-    color: #b77c52; /* IMPROVED: Changed from #d4a476 for better contrast */
+    color: #b77c52;
+    /* IMPROVED: Changed from #d4a476 for better contrast */
     font-size: 12px;
-    opacity: 0.5;    
+    opacity: 0.5;
     pointer-events: none;
     padding: 0 2px;
     padding-bottom: 2px;
@@ -102,7 +107,7 @@ footer {
 
 .utility-bar .dropdown-menu {
     background-color: #ffffff !important;
-    border: 1px solid rgba(0,0,0,0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
@@ -123,23 +128,24 @@ footer {
 }
 
 .navbar-nav {
-    margin-left: 50px; 
+    margin-left: 50px;
     display: flex;
     align-items: center;
 }
 
 .nav-item {
-    padding: 0 10px; 
+    padding: 0 10px;
 }
 
 /* Navbar text colors */
 .nav-link {
-    color: #444444 !important; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #444444 !important;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
     font-weight: 500;
     transition: color 0.2s ease;
 }
 
-.nav-link:hover, 
+.nav-link:hover,
 .nav-link:focus {
     color: #b77c52 !important;
 }
@@ -150,10 +156,11 @@ footer {
 }
 
 .dropdown-item {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
 }
 
-.dropdown-item:hover, 
+.dropdown-item:hover,
 .dropdown-item:focus {
     background-color: #f5f0e9;
     color: #b77c52;
@@ -206,16 +213,17 @@ footer {
 .navbar .dropdown-menu {
     padding: 0.5rem 0;
     margin-top: 0;
-    border: 1px solid rgba(0,0,0,0.15);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.175);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
 }
 
 /* Dropdown items styling */
 .navbar .dropdown-menu .dropdown-item {
     padding: 0.25rem 1.5rem;
     font-weight: 400;
-    color: #333333; /* IMPROVED: Changed from #212529 to slightly lighter for consistency */
+    color: #333333;
+    /* IMPROVED: Changed from #212529 to slightly lighter for consistency */
     background-color: transparent;
     border: 0;
 }
@@ -224,7 +232,7 @@ footer {
     border-bottom: none;
 }
 
-.navbar .dropdown-menu .dropdown-item:hover, 
+.navbar .dropdown-menu .dropdown-item:hover,
 .navbar .dropdown-menu .dropdown-item:focus {
     color: #16181b;
     text-decoration: none;
@@ -240,16 +248,17 @@ footer {
 
 /* Desktop dropdown behavior */
 @media (min-width: 992px) {
+
     /* Make the nav item container stable */
     .navbar-nav {
         height: 60px;
     }
-    
+
     /* Ensure the dropdown container is positioned relative */
     .navbar .nav-item.dropdown {
         position: relative !important;
     }
-    
+
     /* Position the dropdown menu directly under the Products button */
     .navbar-nav .nav-item.dropdown .dropdown-menu {
         position: absolute !important;
@@ -259,13 +268,13 @@ footer {
         min-width: 200px;
         width: auto;
         margin: 0 !important;
-        border: 1px solid rgba(0,0,0,0.15);
+        border: 1px solid rgba(0, 0, 0, 0.15);
         border-radius: 0.25rem;
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.175);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
         background-color: white;
         z-index: 1040 !important;
     }
-    
+
     /* Make dropdown items clearly visible */
     .navbar .dropdown-menu .dropdown-item {
         background-color: white;
@@ -275,6 +284,7 @@ footer {
 
 /* Mobile dropdown behavior */
 @media (max-width: 991px) {
+
     /* Keep static positioning for mobile */
     .navbar .dropdown {
         position: static !important;
@@ -286,7 +296,7 @@ footer {
    ================================================== */
 /* Search styling */
 .search-input {
-    padding: 8px 48px 8px 16px;  
+    padding: 8px 48px 8px 16px;
     border-radius: 25px;
     width: 180px;
     border: 1px solid #e9e2d9;
@@ -295,7 +305,8 @@ footer {
 }
 
 .search-input::placeholder {
-    color: #999999; /* IMPROVED: Changed from #9a8268 to lighter gray for better readability */
+    color: #999999;
+    /* IMPROVED: Changed from #9a8268 to lighter gray for better readability */
     font-size: 16px;
 }
 
@@ -320,8 +331,8 @@ footer {
     transition: opacity 0.2s ease;
 }
 
-.search-input:focus + .search-icon,
-.search-input:not(:placeholder-shown) + .search-icon {
+.search-input:focus+.search-icon,
+.search-input:not(:placeholder-shown)+.search-icon {
     opacity: 0;
 }
 
@@ -337,7 +348,7 @@ footer {
 .nav-link .badge.rounded-pill.bg-primary,
 .mobile-cart .badge.rounded-pill.bg-primary {
     position: absolute !important;
-    top: -1px !important; 
+    top: -1px !important;
     right: -15px !important;
     transform: translate(-80%, -25%) !important;
     font-size: 0.65rem;
@@ -351,7 +362,7 @@ footer {
 
 /* Fix for mobile cart badge */
 .mobile-cart .badge {
-    top: 5px !important; 
+    top: 5px !important;
     right: -12px !important;
     transform: translate(0%, -25%) !important;
 }
@@ -370,8 +381,13 @@ footer {
 /* ==================================================
    7. Typography & Text Styles
    ================================================== */
-h1, h2, h3, h4, h5 {
-    color: #6d5741; /* Keep brown for headings */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: #6d5741;
+    /* Keep brown for headings */
 }
 
 h3.section-title {
@@ -389,7 +405,8 @@ h3.section-title {
 
 /* Product card title */
 .card-title {
-    color: #444444; /* IMPROVED: Changed from #b77c52 to darker gray for better readability */
+    color: #444444;
+    /* IMPROVED: Changed from #b77c52 to darker gray for better readability */
     font-weight: 500;
 }
 
@@ -422,7 +439,7 @@ h3.section-title {
 }
 
 /* Section headings on product details page */
-.product-details h3, 
+.product-details h3,
 .mt-5 h3 {
     color: #b77c52;
     font-weight: 600;
@@ -437,7 +454,8 @@ h3.section-title {
 
 /* Description text on product details */
 .product-details p {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
     line-height: 1.6;
 }
 
@@ -447,11 +465,13 @@ h3.section-title {
 }
 
 .text-secondary {
-    color: #777777 !important; /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
+    color: #777777 !important;
+    /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
 }
 
 .text-muted {
-    color: #777777 !important; /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
+    color: #777777 !important;
+    /* IMPROVED: Changed from #9a8268 to medium gray for better contrast */
 }
 
 /* Special emphasis text */
@@ -468,11 +488,12 @@ h3.section-title {
 
 /* Form labels on product details */
 .form-label {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
 }
 
 /* Additional section headers across site */
-section h2, 
+section h2,
 section .h2 {
     color: #b77c52;
     font-weight: 600;
@@ -548,7 +569,8 @@ section .h2 {
     padding: 8px 20px;
     background-color: transparent;
     border: 2px solid #f5f0e9;
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray for better readability */
     transition: all 0.3s ease;
 }
 
@@ -570,13 +592,15 @@ section .h2 {
 
 /* Custom Add to Cart button styling */
 .btn-outline-dark.cart-btn {
-    color: #444444; /* IMPROVED: Changed from #000000 to darker gray for better consistency */
+    color: #444444;
+    /* IMPROVED: Changed from #000000 to darker gray for better consistency */
     background-color: transparent;
     border-color: #e9e2d9;
 }
 
 .btn-outline-dark.cart-btn:hover {
-    color: #b77c52 !important; /* IMPROVED: Changed from #000000 to gold/brown */
+    color: #b77c52 !important;
+    /* IMPROVED: Changed from #000000 to gold/brown */
     background-color: transparent !important;
     border-color: #b77c52 !important;
 }
@@ -587,7 +611,8 @@ section .h2 {
 
 .btn-outline-dark.cart-btn:active,
 .btn-outline-dark.cart-btn:focus {
-    color: #444444 !important; /* IMPROVED: Changed from #000000 to darker gray */
+    color: #444444 !important;
+    /* IMPROVED: Changed from #000000 to darker gray */
     background-color: rgba(183, 124, 82, 0.1) !important;
     border-color: #b77c52 !important;
     box-shadow: none !important;
@@ -596,7 +621,8 @@ section .h2 {
 /* View All Products button styling */
 .view-all-btn {
     background-color: white;
-    color: #444444; /* IMPROVED: Changed from #000000 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #000000 to darker gray */
     border: 1px solid #e9e2d9;
     padding: 8px 20px;
     transition: all 0.3s ease;
@@ -641,7 +667,8 @@ section .h2 {
 
 /* Sort buttons styling */
 .btn-outline-secondary {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     border-color: #e9e2d9;
 }
 
@@ -703,7 +730,8 @@ section .h2 {
 }
 
 .list-group-item a {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
 }
 
 .list-group-item a:hover {
@@ -713,20 +741,23 @@ section .h2 {
 /* Card header styling */
 .card-header {
     background-color: #f5f0e9;
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     border-bottom: 1px solid #e9e2d9;
 }
 
 /* Alert styling */
 .alert-info {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     background-color: #f5f0e9;
     border-color: #e9e2d9;
 }
 
 /* Breadcrumb styling */
 .breadcrumb-item a {
-    color: #777777; /* IMPROVED: Changed from #9a8268 to medium gray */
+    color: #777777;
+    /* IMPROVED: Changed from #9a8268 to medium gray */
     text-decoration: none;
 }
 
@@ -741,7 +772,8 @@ section .h2 {
 
 /* Pagination styling */
 .pagination .page-link {
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     background-color: #fff;
     border-color: #e9e2d9;
 }
@@ -795,7 +827,8 @@ section .h2 {
 
 .banner-content {
     max-width: 500px;
-    padding-left: 5%; /* Use percentage for responsive positioning */
+    padding-left: 5%;
+    /* Use percentage for responsive positioning */
 }
 
 .banner-overlay h1 {
@@ -856,7 +889,8 @@ section .h2 {
 }
 
 .forgot-link {
-    color: #777777; /* IMPROVED: Changed from #9a8268 to medium gray */
+    color: #777777;
+    /* IMPROVED: Changed from #9a8268 to medium gray */
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -878,7 +912,8 @@ section .h2 {
 .social-btn {
     border: 1px solid #e9e2d9;
     background-color: #fff;
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     padding: 10px;
     border-radius: 6px;
     transition: all 0.2s ease;
@@ -888,7 +923,8 @@ section .h2 {
 .social-box {
     border: 2px solid #e0d5c5;
     background-color: #fff;
-    color: #444444; /* IMPROVED: Changed from #6d5741 to darker gray */
+    color: #444444;
+    /* IMPROVED: Changed from #6d5741 to darker gray */
     font-weight: 500;
     padding: 12px 15px;
     border-radius: 8px;
@@ -944,11 +980,13 @@ section .h2 {
 /* Product column sizing for different screen sizes */
 @media (max-width: 1199px) {
     .product-col {
-        width: 25%; /* 4 per row on medium screens */
+        width: 25%;
+        /* 4 per row on medium screens */
     }
 }
 
 @media (max-width: 991px) {
+
     /* Keep desktop search hidden on mobile */
     form:not(.mobile-search) .search-input {
         display: none;
@@ -960,7 +998,7 @@ section .h2 {
         height: calc(100% - 28px) !important;
         z-index: 1033;
     }
-    
+
     /* Fix dropdown toggle button in mobile */
     .offcanvas-body .dropdown-toggle::after {
         display: inline-block !important;
@@ -988,19 +1026,20 @@ section .h2 {
     .offcanvas-backdrop {
         z-index: 1032 !important;
         opacity: 0.5 !important;
-        background-color: rgba(0,0,0,0.5) !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;
     }
 
     /* Make sure the dropdown menu appears properly */
-    .dropdown-toggle[aria-expanded="true"] + .dropdown-menu {
+    .dropdown-toggle[aria-expanded="true"]+.dropdown-menu {
         display: block !important;
     }
-    
+
     /* Position mobile cart button */
     .mobile-cart {
         position: absolute;
         right: 80px;
-        top: 55%; /* IMPROVED: Changed from 50% to 55% to move down */
+        top: 55%;
+        /* IMPROVED: Changed from 50% to 55% to move down */
         transform: translateY(-50%);
         z-index: 1034;
     }
@@ -1010,15 +1049,16 @@ section .h2 {
         padding-right: 70px;
         position: relative;
     }
-    
+
     /* Position navbar toggle button */
     .navbar-toggler {
         position: absolute;
         right: 15px;
-        top: 55%; /* IMPROVED: Changed from 50% to 55% to move down */
+        top: 55%;
+        /* IMPROVED: Changed from 50% to 55% to move down */
         transform: translateY(-50%);
     }
-    
+
     /* Increase main content padding for mobile */
     main {
         padding-top: 105px !important;
@@ -1049,30 +1089,33 @@ section .h2 {
         background: transparent;
         padding-left: 1rem;
     }
-    
+
     /* Product columns for tablet */
     .product-col {
-        width: 33.33%; /* 3 per row on smaller screens */
+        width: 33.33%;
+        /* 3 per row on smaller screens */
     }
-    
+
     /* Adjust hamburger menu positioning */
     /* Center mobile menu content */
     .offcanvas-body {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 2.5rem !important; /* IMPROVED: Changed from 1rem to 2.5rem to move content down */
+        padding-top: 2.5rem !important;
+        /* IMPROVED: Changed from 1rem to 2.5rem to move content down */
     }
-    
+
     /* Reset navbar-nav margins and make it centered */
     .offcanvas-body .navbar-nav {
         margin-left: 0 !important;
         width: 100%;
         justify-content: center;
         text-align: center;
-        margin-top: 0.5rem !important; /* ADD: Extra spacing */
+        margin-top: 0.5rem !important;
+        /* ADD: Extra spacing */
     }
-    
+
     /* Center each nav item */
     .offcanvas-body .nav-item {
         width: 100%;
@@ -1080,13 +1123,15 @@ section .h2 {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 0.75rem 0 !important; /* IMPROVED: from 0.5rem to 0.75rem */
+        padding: 0.75rem 0 !important;
+        /* IMPROVED: from 0.5rem to 0.75rem */
     }
-    
+
     /* Ensure dropdown items are centered */
     .offcanvas-body .dropdown-menu {
         width: 80% !important;
-        margin: 0.5rem auto !important; /* IMPROVED: Added margin */
+        margin: 0.5rem auto !important;
+        /* IMPROVED: Added margin */
         padding-left: 0 !important;
         background: transparent;
     }
@@ -1094,28 +1139,29 @@ section .h2 {
 
 @media (max-width: 767px) {
     .product-col {
-        width: 50%; /* 2 per row on mobile */
+        width: 50%;
+        /* 2 per row on mobile */
     }
-    
+
     /* Banner adaptations for mobile */
     .banner-image {
         height: 300px;
     }
-    
+
     .banner-overlay h1 {
         font-size: 2rem;
     }
-    
+
     .banner-overlay h1:after {
         width: 60px;
         margin-top: 10px;
         margin-bottom: 10px;
     }
-    
+
     .banner-overlay p {
         font-size: 1rem;
     }
-    
+
     .banner-content {
         max-width: 80%;
     }
@@ -1123,35 +1169,40 @@ section .h2 {
 
 /* Small screen specific fixes */
 @media (max-width: 575.98px) {
+
     /* Make logo smaller on very small screens */
     .navbar-brand img {
         max-height: 40px;
-        padding-top: 3px; /* ADDED: Fine-tune position */
+        padding-top: 3px;
+        /* ADDED: Fine-tune position */
     }
-    
+
     /* Adjust utility buttons for small screens */
     .utility-btn {
         padding: 2px 6px;
         font-size: 11px;
     }
-    
+
     /* Product column for very small screens */
     .product-col {
-        width: 100%; /* 1 per row on very small screens */
+        width: 100%;
+        /* 1 per row on very small screens */
     }
-    
+
     /* Auth card padding adjustment */
     .auth-card .card-body {
         padding: 1.5rem;
     }
-    
+
     /* Further adjustments for very small screens */
     .navbar-toggler {
-        right: 10px; /* Less right margin on very small screens */
+        right: 10px;
+        /* Less right margin on very small screens */
     }
-    
+
     .mobile-cart {
-        right: 70px; /* Less right margin on very small screens */
+        right: 70px;
+        /* Less right margin on very small screens */
     }
 }
 
@@ -1171,9 +1222,9 @@ body.offcanvas-active .mobile-cart {
     max-height: 400px;
     overflow-y: auto;
     background-color: white;
-    border: 1px solid rgba(0,0,0,0.15);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0 0 0.25rem 0.25rem;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     z-index: 1050;
     margin-top: 1px;
     padding: 0;
@@ -1274,7 +1325,8 @@ body.offcanvas-active .mobile-cart {
     font-weight: 600;
 }
 
-#search-hints, #mobile-search-hints {
+#search-hints,
+#mobile-search-hints {
     position: absolute;
     top: 100%;
     left: 0;
@@ -1282,9 +1334,9 @@ body.offcanvas-active .mobile-cart {
     max-height: 400px;
     overflow-y: auto;
     background-color: white;
-    border: 1px solid rgba(0,0,0,0.15);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0 0 8px 8px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     z-index: 1050;
     margin-top: 1px;
     padding: 0;
@@ -1431,7 +1483,7 @@ body.offcanvas-active .mobile-cart {
     .mobile-search {
         position: relative;
     }
-    
+
     .mobile-search .search-results-dropdown {
         top: calc(100% + 2px);
     }
@@ -1441,169 +1493,173 @@ body.offcanvas-active .mobile-cart {
    21. Small Smartphone Optimization (Width < 400px)
    ================================================== */
 
-   @media (max-width: 399px) {
+@media (max-width: 399px) {
+
     /* Adjust product cards for tiny screens */
     .product-col {
-        width: 100% !important; /* Force single column layout */
+        width: 100% !important;
+        /* Force single column layout */
     }
-    
+
     /* Make product cards more compact */
     .product-card {
         margin-bottom: 10px;
     }
-    
+
     .product-card .card-img-top {
         height: 130px !important;
     }
-    
+
     .product-card .card-body {
         padding: 0.75rem !important;
     }
-    
+
     .product-card .card-title {
         font-size: 0.9rem !important;
         height: auto !important;
         max-height: 40px;
         overflow: hidden;
     }
-    
+
     /* Smaller font size for all buttons */
     .btn {
         font-size: 0.8rem !important;
         padding: 0.25rem 0.5rem !important;
     }
-    
+
     /* Navbar & Logo adjustments */
     .navbar-brand {
         max-width: 70% !important;
     }
-    
+
     .navbar-brand img {
         max-height: 35px !important;
     }
-    
+
     /* Reduce header margins */
     h1 {
         font-size: 1.5rem !important;
         margin-bottom: 0.5rem !important;
     }
-    
+
     h2 {
         font-size: 1.3rem !important;
     }
-    
+
     h3 {
         font-size: 1.2rem !important;
     }
-    
+
     /* Make banner more compact */
     .banner-image {
         height: 150px !important;
     }
-    
+
     .banner-overlay h1 {
         font-size: 1.3rem !important;
     }
-    
+
     .banner-overlay h1:after {
         width: 50px !important;
         margin-top: 8px !important;
         margin-bottom: 8px !important;
     }
-    
+
     .banner-overlay p {
         font-size: 0.8rem !important;
     }
-    
+
     /* Adjust utility bar */
     .utility-bar {
         font-size: 10px !important;
     }
-    
+
     .utility-btn {
         font-size: 10px !important;
         padding: 2px 4px !important;
     }
-    
+
     /* Adjust spacing */
     .container {
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
-    
+
     .py-5 {
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
     }
-    
+
     .my-5 {
         margin-top: 1rem !important;
         margin-bottom: 1rem !important;
     }
-    
+
     /* Adjust form inputs */
-    input, select, textarea {
+    input,
+    select,
+    textarea {
         font-size: 0.9rem !important;
     }
-    
+
     /* Login & Registration forms */
     .auth-card .card-body {
         padding: 1rem !important;
     }
-    
+
     .auth-title {
         font-size: 1.2rem !important;
     }
-    
+
     /* Fix social login buttons */
     .social-box {
         font-size: 0.8rem !important;
         padding: 8px !important;
     }
-    
+
     .social-login .col-6 {
         padding-left: 5px !important;
         padding-right: 5px !important;
     }
-    
+
     /* Footer adjustments */
     footer {
         font-size: 0.8rem !important;
         padding: 10px 5px !important;
     }
-    
+
     footer h5 {
         font-size: 1rem !important;
     }
-    
+
     /* Adjust form controls for checkout */
     .form-control {
         padding: 0.375rem 0.5rem !important;
     }
-    
+
     /* Adjust pagination */
     .pagination .page-link {
         padding: 0.25rem 0.5rem !important;
         font-size: 0.8rem !important;
     }
-    
+
     /* Adjust product details page */
     .product-detail-img {
         height: auto !important;
         max-height: 200px !important;
     }
-    
+
     /* Make quantity selector smaller */
     .quantity-selector {
         width: 80px !important;
     }
-    
+
     /* Fix cart page layout */
     .cart-item {
         flex-direction: column !important;
         align-items: center !important;
     }
-    
+
     .cart-item-image {
         margin-bottom: 10px !important;
     }
@@ -1611,46 +1667,47 @@ body.offcanvas-active .mobile-cart {
 
 /* Specific portrait mode fixes for small phones */
 @media (max-width: 399px) and (orientation: portrait) {
+
     /* Further reduce padding to maximize content space */
     .container {
         padding-left: 5px !important;
         padding-right: 5px !important;
     }
-    
+
     /* Remove unnecessary margins */
     .card {
         margin-bottom: 10px !important;
     }
-    
+
     /* Fix navbar height */
     .navbar {
         min-height: 45px !important;
     }
-    
+
     /* Push main content down to account for smaller navbar */
     main {
         padding-top: 70px !important;
     }
-    
+
     /* Optimize search bar */
     .search-input {
         height: 32px !important;
     }
-    
+
     /* Make dropdown menus manageable */
     .dropdown-menu {
         min-width: 200px !important;
     }
-    
+
     /* Fix search results dropdown */
     .search-results-dropdown {
         max-height: 300px !important;
     }
-    
+
     .search-item {
         padding: 5px 8px !important;
     }
-    
+
     .search-item-image {
         width: 40px !important;
         height: 40px !important;
@@ -1661,45 +1718,200 @@ body.offcanvas-active .mobile-cart {
 
 /* Fix for extremely small devices (Galaxy Fold when folded, etc.) */
 @media (max-width: 280px) {
+
     /* Force even smaller text */
     body {
         font-size: 12px !important;
     }
-    
+
     /* Further reduce button size */
     .btn {
         padding: 0.2rem 0.4rem !important;
         font-size: 0.75rem !important;
     }
-    
+
     /* Make the navbar brand even smaller */
     .navbar-brand img {
         max-height: 30px !important;
     }
-    
+
     /* Stack buttons in product details */
     .product-buttons .btn {
         margin-bottom: 5px !important;
         width: 100% !important;
     }
-    
+
     /* Hide some elements if needed */
     .navbar-brand span {
         display: none !important;
     }
-    
+
     /* Fix auth cards */
     .auth-card {
         border-radius: 0 !important;
     }
-    
+
     /* Fix social login */
     .social-login .row {
         flex-direction: column !important;
     }
-    
+
     .social-login .col-6 {
         width: 100% !important;
         margin-bottom: 8px !important;
     }
+}
+
+/* ==================================================
+   15. Header Icons & Notifications
+   ================================================== */
+/* ==================================================
+   15. Header Icons & Notifications (CLEAN FIX)
+   ================================================== */
+
+/* 1. The Container (LI) - Forces items inside to sit in a Row */
+.navbar .nav-item.d-flex,
+.nav-item.d-flex {
+    display: flex !important;
+    flex-direction: row !important;
+    /* Horizontal layout */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    /* Space between Bell and Cart */
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    padding: 0 10px !important;
+}
+
+/* 2. The Links (A) - Stop them from stretching */
+.navbar .nav-item.d-flex .nav-link,
+.nav-item.d-flex .nav-link {
+    display: inline-flex !important;
+    width: auto !important;
+    padding: 5px !important;
+    position: relative !important;
+    /* For badge positioning */
+    flex: 0 0 auto !important;
+}
+
+/* 3. The Icons (I) - Alignment */
+.navbar .nav-item.d-flex .bi {
+    font-size: 1.25rem !important;
+    /* 20px */
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    color: #444;
+    /* Default dark color */
+}
+
+/* 4. The Badges (Red numbers) */
+.navbar .nav-item.d-flex .badge,
+#notification-badge {
+    position: absolute !important;
+    top: -5px !important;
+    right: -8px !important;
+    transform: none !important;
+    font-size: 0.65rem !important;
+    min-width: 16px;
+    height: 16px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+/* 5. Notification Dropdown Styling */
+.notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 350px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 2000;
+    border-radius: 4px;
+
+    /* THIS IS THE IMPORTANT LINE THAT HIDES IT */
+    display: none;
+}
+
+.notification-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.notification-item {
+    display: block;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+    color: #b77c52;
+}
+
+/* Mobile Specific Tweaks */
+@media (max-width: 991px) {
+
+    /* Ensure they stay side-by-side even in the mobile menu */
+    .navbar-nav .nav-item.d-flex {
+        margin: 10px auto !important;
+        justify-content: center !important;
+    }
+}
+
+/* Fix: allow clicks on page content under the banner and keep header clickable */
+.banner-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Make decorative overlay non-interactive (lets clicks pass through) */
+.banner-overlay {
+    pointer-events: none !important;
+    /* allow clicks through overlay */
+    z-index: 1 !important;
+}
+
+/* Keep interactive content in banner clickable */
+.banner-container .banner-content {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+    /* content (buttons/links) inside banner still clickable */
+}
+
+/* Ensure header/topbar is on top and interactive */
+.top-bar,
+.navbar,
+header {
+    position: relative;
+    /* ensure z-index works */
+    z-index: 9999 !important;
+}
+
+/* Ensure product links are above any overlays */
+.product-col .product-card,
+.product-col a {
+    position: relative;
+    /* enable z-index */
+    z-index: 3 !important;
+}
+
+/* Debug: remove any debugging overlay left earlier */
+#notification-debug {
+    display: none !important;
+    pointer-events: none !important;
 }

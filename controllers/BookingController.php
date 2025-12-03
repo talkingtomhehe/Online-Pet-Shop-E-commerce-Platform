@@ -156,6 +156,22 @@ class BookingController {
         
         if ($appointmentId) {
             $_SESSION['success_message'] = 'Your appointment request has been submitted successfully! We will review and confirm your booking shortly.';
+            
+            // Notify user about the new booking
+            require_once 'models/Notification.php';
+            // Use the existing DB connection from the controller instead of creating a new one
+            $notification = new Notification(); 
+
+            // 1. Define the specific message
+            $message = "Your Pet Spa booking #{$appointmentId} has been placed successfully.";
+
+            // 2. Define the exact link you asked for
+            // (Using relative path is safer, but matches your request structure)
+            $link = "index.php?page=user-appointments";
+
+            // 3. Call create with the correct 3 arguments: (User, Message, Link)
+            $notification->create($userId, $message, $link);
+
             header('Location: index.php?page=user-appointments');
         } else {
             $_SESSION['error_message'] = 'Failed to create appointment. Please try again.';
